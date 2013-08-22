@@ -39,3 +39,4 @@ move(Piece) se skládá ze dvou částí
     choosePiece() = 0
 
 
+honzova poznamka
