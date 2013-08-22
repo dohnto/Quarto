@@ -1,0 +1,8 @@
+classes
+    IPlayer: move()
+        HumanPlayer
+        RandomPlayer
+        NovicePlayer
+        MinMaxPlayer
+
+    Piece: property1-4 or number
