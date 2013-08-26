@@ -1,6 +1,55 @@
-classes
-    Board - property matrix and stock
-    Matrix
+Classes
+=======
+
+Game
+-------
+Description:
+- Enables selection of playere/modes
+- Creates Board object
+- Creates Player object (2x)
+- Main game loop
+- Checks the state of the game
+
+Properties:
+- turn // whose turn is it, object pointer
+
+Methods:
+
+
+Board
+-------
+Description: 
+
+Properties:
+- Matrix // game matrix 4*4
+- Stock  // stock of pieces	
+- Chosen piece
+
+Methods:
+- show available pieces
+- select piece
+- place piece
+- show board
+- select square
+- get matrix	// returns the whole array (for minimax tree generation, checking, heuristics, ...)
+	
+	
+Player
+-------
+Description:
+
+Properties:
+- Mode 	// (human | random | novice | minimax)
+- Depth // (null | unsigned)
+
+Methods:
+- select piece
+- place piece
+
+-------------------------------------------------------------------------------
+
+Notes:
+- potreba primy pristup k Matrix (2D pole?) - kvuli heuristikam, kontrole stavu
 
     IPlayer: move(), choosePiece()
         HumanPlayer
@@ -38,5 +87,6 @@ move(Piece) se skládá ze dvou částí
     playPiece() = 0
     choosePiece() = 0
 
-
-honzova poznamka
+Q?
+=============
+- How to represent pieces? (object, enum, number, ...)?
