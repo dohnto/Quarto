@@ -46,6 +46,21 @@ Methods:
 - select piece
 - place piece
 
+Piece
+------
+Description:
+- object represents one of 16 pieces
+
+Properties:
+- type (short int - preferably 8 bits)
+
+Methods:
+- IsBlue
+- IsSquare
+- IsBig
+- IsSolid
+
+
 -------------------------------------------------------------------------------
 
 Notes:
