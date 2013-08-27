@@ -9,5 +9,5 @@ Piece::Piece(unsigned char properties, QObject *parent) :
 
 void Piece::print()
 {
-    qDebug() << "I am piece, my properties are " << properties;
+    qDebug() << "I am piece, my properties are " << isSmall() << isBlue() << isHollow() << isSquare();
 }

@@ -16,6 +16,7 @@ public:
 
 private:
     void playPiece(Piece *);
+
 signals:
     
 public slots:
