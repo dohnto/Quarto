@@ -25,4 +25,5 @@ HEADERS += \
     game.h \
     board.h \
     player.h \
-    piece.h
+    piece.h \
+    common.h

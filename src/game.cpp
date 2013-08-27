@@ -15,7 +15,7 @@ Game::Game(QObject *parent) : QObject(parent) {
     player1 = new Player(this);
     player2 = new Player(this);
     board   = new Board(this);
-    piece   = new Piece(this);
+    //piece   = new Piece(this);
 }
 
 /**
