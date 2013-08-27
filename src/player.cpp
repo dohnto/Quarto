@@ -15,17 +15,3 @@ Piece *Player::move(Piece *piece)
     playPiece(piece);
     return choosePiece();
 }
-
-Piece *Player::choosePiece()
-{
-    qDebug() << "Vybiram figurku";
-    return NULL;
-}
-
-/**
- * @brief Player::playPiece plays given piece
- */
-void Player::playPiece(Piece *piece)
-{
-    qDebug() << "Hraju figurku";
-}

@@ -4,6 +4,7 @@
 #include <QtCore/QCoreApplication>
 #include <QObject>
 #include "player.h"
+#include "playerrandom.h"
 #include "board.h"
 #include "piece.h"
 

@@ -102,6 +102,13 @@ Board bude poskytovat rozhrani Board->choose(PieceEnum) a Board->place(PieceEnum
 move(Piece) se skládá ze dvou částí
     playPiece() = 0
     choosePiece() = 0
+----------------------------------
+CMD:
+--help
+--random -- random
+--random --novice (--minimax X, --remote PORT)
+(--headless)
+
 
 Q?
 =============

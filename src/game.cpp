@@ -12,8 +12,8 @@ Game::Game(QObject *parent) : QObject(parent) {
     app = QCoreApplication::instance();
 
     // create essential objects
-    player1 = new Player(this);
-    player2 = new Player(this);
+    player1 = new PlayerRandom(this);
+    player2 = new PlayerRandom(this);
 
     turn = player2;
 
