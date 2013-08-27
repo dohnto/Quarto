@@ -7,6 +7,7 @@
 #include "playerrandom.h"
 #include "board.h"
 #include "piece.h"
+#include "common.h"
 
 class Game : public QObject
 {
@@ -14,7 +15,7 @@ class Game : public QObject
 public:
 
     /// Constructor.
-    explicit Game(QObject *parent = 0);
+    explicit Game(player_t & p1, player_t & p2, QObject *parent = 0);
 
     /// Quitting the application.
     void quit();
@@ -28,6 +29,7 @@ private:
     Board   *board;
     
     Player *getOpponent(Player *);
+    Player *createPlayer(player_t & player);
 signals:
     /// Finishes the application.
     void finished();

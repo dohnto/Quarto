@@ -6,14 +6,15 @@
  *
  * @param parent a pointer to the parent
  */
-Game::Game(QObject *parent) : QObject(parent)
+Game::Game(player_t & p1, player_t & p2, QObject *parent) : QObject(parent)
 {
     // Get the instance of the main application
     app = QCoreApplication::instance();
 
     // create essential objects
-    player1 = new PlayerRandom(board, this);
-    player2 = new PlayerRandom(board, this);
+
+    player1 = createPlayer(p1);
+    player2 = createPlayer(p2);
 
     turn = player2;
 
@@ -60,6 +61,22 @@ Player *Game::getOpponent(Player *player)
         return player1;
     else
         throw "getOpponent: invalid given player";  // TODO
+}
+
+Player *Game::createPlayer(player_t &player)
+{
+    Player *retval = NULL;
+    switch (player.type) {
+    case RANDOM:
+        retval = new PlayerRandom(board, this);
+        break;
+    // TODO
+    default:
+        throw "NOT IMPLEMENTED";
+        break;
+    }
+
+    return retval;
 }
 
 /**

@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     }
 
     // create the main class
-    Game game(&app);
+    Game game(settings.players[0], settings.players[1], &app);
 
     // connect up the signals
     QObject::connect(&game,   SIGNAL(finished()),
