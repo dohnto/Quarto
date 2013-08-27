@@ -3,7 +3,7 @@
 
 #include "player.h"
 
-class PlayerMiniMax : public Player
+class PlayerMiniMax // : public Player
 {
 public:
     PlayerMiniMax();

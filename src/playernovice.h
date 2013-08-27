@@ -3,7 +3,7 @@
 
 #include "player.h"
 
-class PlayerNovice : public Player
+class PlayerNovice // : public Player
 {
 public:
     PlayerNovice();

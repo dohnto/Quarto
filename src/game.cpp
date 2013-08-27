@@ -6,14 +6,14 @@
  *
  * @param parent a pointer to the parent
  */
-Game::Game(QObject *parent) : QObject(parent) {
-
+Game::Game(QObject *parent) : QObject(parent)
+{
     // Get the instance of the main application
     app = QCoreApplication::instance();
 
     // create essential objects
-    player1 = new PlayerRandom(this);
-    player2 = new PlayerRandom(this);
+    player1 = new PlayerRandom(board, this);
+    player2 = new PlayerRandom(board, this);
 
     turn = player2;
 

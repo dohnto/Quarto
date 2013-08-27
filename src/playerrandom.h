@@ -6,7 +6,7 @@
 class PlayerRandom : public Player
 {
 public:
-    explicit PlayerRandom(QObject *parent = 0);
+    explicit PlayerRandom(Board *board, QObject *parent = 0);
     Piece *choosePiece();
 
 private:

@@ -1,7 +1,8 @@
-- zpracovani parametru			tom
+- zpracovani parametru			tom						
 - board a piece					tom,hon						OK
 - vypis board a stock			hon
-- kostra rizeni hry - Game		tom
+- kostra rizeni hry - Game		tom							OK
+- kontrola stavu hry							
 - player - move					tom
 	- random					hon
 	- novice					tom

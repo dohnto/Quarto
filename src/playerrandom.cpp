@@ -1,8 +1,9 @@
 #include "playerrandom.h"
 
-PlayerRandom::PlayerRandom(QObject *parent) :
-    Player(parent)
+PlayerRandom::PlayerRandom(Board *board, QObject *parent) :
+    Player(board, parent)
 {
+
 }
 
 
