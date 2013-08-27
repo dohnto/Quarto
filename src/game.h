@@ -27,6 +27,7 @@ private:
     Board   *board;
     Piece   *piece;
     
+    Player *getOpponent(Player *);
 signals:
     /// Finishes the application.
     void finished();

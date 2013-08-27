@@ -1,6 +1,6 @@
 #include "piece.h"
 
-Piece::Piece(QBitArray properties, QObject *parent) :
+Piece::Piece(unsigned char properties, QObject *parent) :
     QObject(parent),
     properties(properties)
 {
@@ -9,5 +9,5 @@ Piece::Piece(QBitArray properties, QObject *parent) :
 
 void Piece::print()
 {
-    qDebug() << "I am piece, my properties are " << properties << "\n";
+    qDebug() << "I am piece, my properties are " << isSmall() << isBlue() << isHollow() << isSquare();
 }

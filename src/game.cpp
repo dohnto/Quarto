@@ -14,6 +14,9 @@ Game::Game(QObject *parent) : QObject(parent) {
     // create essential objects
     player1 = new Player(this);
     player2 = new Player(this);
+
+    turn = player2;
+
     board   = new Board(this);
     //piece   = new Piece(this);
 }
@@ -25,6 +28,14 @@ Game::Game(QObject *parent) : QObject(parent) {
 void Game::run() {
     qDebug() << "Game is running";                  // TODO delete
 
+    Piece* piece = turn->choosePiece();
+    for (unsigned i = 0; i < 3; i++) {                                  // TODO change
+        qDebug() << "---------------------";
+        turn = getOpponent(turn);
+        piece = turn->move(piece);
+        // check situation                          // TODO
+    }
+
     quit();
 }
 
@@ -33,6 +44,22 @@ void Game::run() {
  */
 void Game::quit() {
     emit finished();
+}
+
+
+/**
+ * @brief Game::getOpponent
+ * @param player
+ * @return returns opponent (second player) of given player
+ */
+Player *Game::getOpponent(Player *player)
+{
+    if (player == player1)
+        return player2;
+    if (player == player2)
+        return player1;
+    else
+        throw "getOpponent: invalid given player";  // TODO
 }
 
 /**

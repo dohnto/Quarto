@@ -19,11 +19,17 @@ SOURCES += main.cpp \
     game.cpp \
     board.cpp \
     player.cpp \
-    piece.cpp
+    piece.cpp \
+    playerrandom.cpp \
+    playernovice.cpp \
+    playerminimax.cpp
 
 HEADERS += \
     game.h \
     board.h \
     player.h \
     piece.h \
-    common.h
+    common.h \
+    playerrandom.h \
+    playernovice.h \
+    playerminimax.h

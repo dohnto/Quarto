@@ -2,7 +2,7 @@
 #define BOARD_H
 
 #include <QObject>
-#include <QVector>
+#include <QList>
 
 #include "common.h"
 #include "piece.h"
@@ -12,9 +12,12 @@ class Board : public QObject
     Q_OBJECT
 public:
     explicit Board(QObject *parent = 0);
-    
+    ~Board();
+    void print();
+
 private:
-    QVector<Piece *> stock;
+    QList<Piece *> stock;
+    Piece ***matrix;
 
 signals:
     
