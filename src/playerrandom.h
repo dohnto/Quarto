@@ -6,7 +6,11 @@
 class PlayerRandom : public Player
 {
 public:
-    PlayerRandom();
+    explicit PlayerRandom(QObject *parent = 0);
+    Piece *choosePiece();
+
+private:
+    void playPiece(Piece *piece);
 };
 
 #endif // PLAYERRANDOM_H

@@ -12,10 +12,10 @@ public:
     explicit Player(QObject *parent = 0);
 
     Piece *move(Piece *);
-    Piece *choosePiece();
+    virtual Piece *choosePiece() = 0;
 
 private:
-    void playPiece(Piece *);
+    virtual void playPiece(Piece *) = 0;
 
 signals:
     
