@@ -32,4 +32,5 @@ HEADERS += \
     common.h \
     playerrandom.h \
     playernovice.h \
-    playerminimax.h
+    playerminimax.h \
+    optionparser/optionparser.h
