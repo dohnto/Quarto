@@ -13,6 +13,7 @@ class Board : public QObject
 public:
     explicit Board(QObject *parent = 0);
     ~Board();
+    void print();
 
 private:
     QList<Piece *> stock;

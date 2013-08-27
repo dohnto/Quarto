@@ -24,3 +24,8 @@ Board::~Board()
         delete[] matrix[i];
     delete[] matrix;
 }
+
+void Board::print()
+{
+
+}
