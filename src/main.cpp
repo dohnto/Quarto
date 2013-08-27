@@ -1,13 +1,73 @@
 #include <QtCore/QCoreApplication>
 #include <QTimer>
+#include <iostream>
+
 #include "game.h"
+#include "common.h"
+#include "optionparser/optionparser.h"
+
+enum status_t {
+    E_OK,
+    E_HEADLESS,
+    E_HELP,
+    E_CMD_ERROR
+};
+
+struct settings_t {
+    status_t status;
+    player_t players[PLAYER_COUNT];
+};
+
+
+enum optionIndex {
+    OI_UNKNOWN,
+    OI_HELP,
+    OI_HEADLESS,
+    OI_RANDOM,
+    OI_NOVICE,
+    OI_MINIMAX,
+    OI_REMOTE,
+    OI_HUMAN
+};
+
+const option::Descriptor usage[] = {
+    {OI_UNKNOWN, 0, "",  "", option::Arg::None,     "USAGE: Quatro [OPTIONS] PLAYER PLAYER \n\n"
+                                                 "Options:" },
+    {OI_HELP,    0, "", "help", option::Arg::None, "  --help  \tPrint this text and exit." },
+    {OI_HEADLESS,0, "", "headless", option::Arg::None, "  --headless  \tStarts without GUI.\n\n"
+                                                 "Players:"},
+    {OI_RANDOM,  0, "", "random", option::Arg::None, "  --random   \tRandom player." },
+    {OI_NOVICE,  0, "", "novice", option::Arg::None, "  --novice   \tNovice player." },
+    {OI_MINIMAX, 0, "", "minimax", option::Arg::None, "  --minimax   \tMinimax player with given depth level." },
+    {OI_REMOTE,  0, "", "remote", option::Arg::None, "  --remote   \tRemote player on given port." },
+    {OI_HUMAN,   0, "", "human", option::Arg::None, "  --human   \tHuman player." },
+ //   {UNKNOWN, 0, "" ,  ""   , option::Arg::None, "\nExamples:\n"
+ //                                                "  example --unknown -- --this_is_no_option\n"
+ //                                                "  example -unk --plus -ppp file1 file2\n" },
+      {0,0,0,0,0,0}
+};
+
+settings_t parse_cmd_params(int argc, char *argv[]);
 
 /**
  * Main program function
  */
 int main(int argc, char *argv[])
 {
+    settings_t settings;
     QCoreApplication app(argc, argv);
+
+    settings = parse_cmd_params(argc, argv);
+    if (settings.status == E_HELP) {
+        option::printUsage(std::cout, usage);
+        return 0;
+    } else if (settings.status == E_CMD_ERROR) {
+        std::cerr << "Error occured when parsing command line parameters.\n\n";
+        option::printUsage(std::cout, usage);
+        return 1;
+    } else {
+
+    }
 
     // create the main class
     Game game(&app);
@@ -22,4 +82,89 @@ int main(int argc, char *argv[])
     QTimer::singleShot(10, &game, SLOT(run()));
 
     return app.exec();
+}
+
+/**
+ * @brief parse_cmd_params creates structure for game settings according to given
+ * parameters
+ * @param argc
+ * @param argv
+ * @return desired structure
+ */
+settings_t parse_cmd_params(int argc, char *argv[])
+{
+    settings_t settings;
+
+    settings.status = E_OK;
+
+    // skip program name argv[0] if present
+    argc -= (argc > 0);
+    argv += (argc > 0);
+
+    option::Stats  stats(usage, argc, argv);
+    option::Option options[stats.options_max], buffer[stats.buffer_max];
+    option::Parser parse(usage, argc, argv, options, buffer);
+
+    if (parse.error()) { // some error occured during parsing
+        settings.status = E_CMD_ERROR;
+        return settings;
+    }
+
+    if (options[OI_HELP] || argc == 0) { // call for help or no parameters
+        settings.status = E_HELP;
+        return settings;
+    }
+
+    // write unknown parameters
+    for (option::Option* opt = options[OI_UNKNOWN]; opt; opt = opt->next())
+        std::cout << "Unknown option: " << opt->name << "\n";
+
+    // write non options parameters
+    for (int i = 0; i < parse.nonOptionsCount(); ++i)
+        std::cout << "Non-option #" << i << ": " << parse.nonOption(i) << "\n";
+
+    // check if everything is ok
+    unsigned players_count = options[OI_HUMAN].count()
+            + options[OI_MINIMAX].count()
+            + options[OI_NOVICE].count()
+            + options[OI_RANDOM].count()
+            + options[OI_REMOTE].count();
+
+    if (options[OI_UNKNOWN].count() > 0 || parse.nonOptionsCount() > 0 || players_count != 2) {
+        settings.status = E_CMD_ERROR;
+        return settings;
+    }
+
+    unsigned player_index = 0;
+
+    // fill up settings structure
+    for (int i = 0; i < parse.optionsCount(); ++i) {
+        option::Option& opt = buffer[i];
+        switch (opt.index()) {
+            case OI_HEADLESS:
+                settings.status = E_HEADLESS;
+                break;
+            case OI_RANDOM:
+                settings.players[player_index++].type = RANDOM;
+                break;
+            case OI_NOVICE:
+                settings.players[player_index++].type = NOVICE;
+                break;
+            case OI_MINIMAX:
+                settings.players[player_index].minimax_level = 0;
+                settings.players[player_index++].type = MINIMAX;
+                break;
+            case OI_REMOTE:
+                settings.players[player_index++].type = REMOTE;
+                break;
+            case OI_HUMAN:
+                settings.players[player_index++].type = HUMAN;
+                break;
+            default:
+                throw "parse_cmd_params: unrecongized player type";
+                break;
+        }
+    }
+
+    return settings;
 }
