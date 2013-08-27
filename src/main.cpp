@@ -5,48 +5,49 @@
 #include "game.h"
 #include "common.h"
 #include "optionparser/optionparser.h"
-#include "playerrandom.h"
-
 
 enum status_t {
     E_OK,
+    E_HEADLESS,
     E_HELP,
     E_CMD_ERROR
 };
 
 struct settings_t {
     status_t status;
-    Player *players[PLAYER_COUNT];
+    player_t players[PLAYER_COUNT];
 };
 
 
 enum optionIndex {
-    UNKNOWN,
-    HELP,
-    RANDOM,
-    NOVICE,
-    MINIMAX,
-    REMOTE,
-    HUMAN
+    OI_UNKNOWN,
+    OI_HELP,
+    OI_HEADLESS,
+    OI_RANDOM,
+    OI_NOVICE,
+    OI_MINIMAX,
+    OI_REMOTE,
+    OI_HUMAN
 };
 
 const option::Descriptor usage[] = {
-    {UNKNOWN, 0, "",  "", option::Arg::None,     "USAGE: Quatro [OPTIONS] PLAYER PLAYER \n\n"
+    {OI_UNKNOWN, 0, "",  "", option::Arg::None,     "USAGE: Quatro [OPTIONS] PLAYER PLAYER \n\n"
                                                  "Options:" },
-    {HELP,    0, "h", "help", option::Arg::None, "  --help  \tPrint this text and exit.\n\n"
+    {OI_HELP,    0, "", "help", option::Arg::None, "  --help  \tPrint this text and exit." },
+    {OI_HEADLESS,0, "", "headless", option::Arg::None, "  --headless  \tStarts without GUI.\n\n"
                                                  "Players:"},
-    {RANDOM,  0, "", "random", option::Arg::None, "  --random, -p  \tRandom player." },
-    {NOVICE,  0, "", "novice", option::Arg::None, "  --novice, -p  \tNovice player." },
-    {MINIMAX, 0, "", "minimax", option::Arg::None, "  --minimax, -p  \tMinimax player with given depth level." },
-    {REMOTE,  0, "", "remote", option::Arg::None, "  --remote, -p  \tRemote player on given port." },
-    {HUMAN,   0, "", "human", option::Arg::None, "  --human, -p  \tHuman player." },
+    {OI_RANDOM,  0, "", "random", option::Arg::None, "  --random   \tRandom player." },
+    {OI_NOVICE,  0, "", "novice", option::Arg::None, "  --novice   \tNovice player." },
+    {OI_MINIMAX, 0, "", "minimax", option::Arg::None, "  --minimax   \tMinimax player with given depth level." },
+    {OI_REMOTE,  0, "", "remote", option::Arg::None, "  --remote   \tRemote player on given port." },
+    {OI_HUMAN,   0, "", "human", option::Arg::None, "  --human   \tHuman player." },
  //   {UNKNOWN, 0, "" ,  ""   , option::Arg::None, "\nExamples:\n"
  //                                                "  example --unknown -- --this_is_no_option\n"
  //                                                "  example -unk --plus -ppp file1 file2\n" },
       {0,0,0,0,0,0}
 };
 
-settings_t parse_cmd_params(int argc, char *argv[], QCoreApplication &app);
+settings_t parse_cmd_params(int argc, char *argv[]);
 
 /**
  * Main program function
@@ -56,11 +57,13 @@ int main(int argc, char *argv[])
     settings_t settings;
     QCoreApplication app(argc, argv);
 
-    settings = parse_cmd_params(argc, argv, app);
+    settings = parse_cmd_params(argc, argv);
     if (settings.status == E_HELP) {
         option::printUsage(std::cout, usage);
         return 0;
     } else if (settings.status == E_CMD_ERROR) {
+        std::cerr << "Error occured when parsing command line parameters.\n\n";
+        option::printUsage(std::cout, usage);
         return 1;
     } else {
 
@@ -81,12 +84,19 @@ int main(int argc, char *argv[])
     return app.exec();
 }
 
-
-settings_t parse_cmd_params(int argc, char *argv[], QCoreApplication &app)
+/**
+ * @brief parse_cmd_params creates structure for game settings according to given
+ * parameters
+ * @param argc
+ * @param argv
+ * @return desired structure
+ */
+settings_t parse_cmd_params(int argc, char *argv[])
 {
     settings_t settings;
 
     settings.status = E_OK;
+
     // skip program name argv[0] if present
     argc -= (argc > 0);
     argv += (argc > 0);
@@ -95,43 +105,65 @@ settings_t parse_cmd_params(int argc, char *argv[], QCoreApplication &app)
     option::Option options[stats.options_max], buffer[stats.buffer_max];
     option::Parser parse(usage, argc, argv, options, buffer);
 
-    if (parse.error()) {
+    if (parse.error()) { // some error occured during parsing
         settings.status = E_CMD_ERROR;
         return settings;
     }
 
-    if (options[HELP] || argc == 0) {
+    if (options[OI_HELP] || argc == 0) { // call for help or no parameters
         settings.status = E_HELP;
         return settings;
     }
 
-    for (option::Option* opt = options[UNKNOWN]; opt; opt = opt->next())
+    // write unknown parameters
+    for (option::Option* opt = options[OI_UNKNOWN]; opt; opt = opt->next())
         std::cout << "Unknown option: " << opt->name << "\n";
 
+    // write non options parameters
     for (int i = 0; i < parse.nonOptionsCount(); ++i)
         std::cout << "Non-option #" << i << ": " << parse.nonOption(i) << "\n";
 
+    // check if everything is ok
+    unsigned players_count = options[OI_HUMAN].count()
+            + options[OI_MINIMAX].count()
+            + options[OI_NOVICE].count()
+            + options[OI_RANDOM].count()
+            + options[OI_REMOTE].count();
 
-    if (options[UNKNOWN].count() > 0 || parse.nonOptionsCount() > 0) {
+    if (options[OI_UNKNOWN].count() > 0 || parse.nonOptionsCount() > 0 || players_count != 2) {
         settings.status = E_CMD_ERROR;
         return settings;
     }
 
     unsigned player_index = 0;
 
+    // fill up settings structure
     for (int i = 0; i < parse.optionsCount(); ++i) {
         option::Option& opt = buffer[i];
         switch (opt.index()) {
-            RANDOM:
-                settings.players[player_index++] = new PlayerRandom(app);
-            NOVICE:
-            MINIMAX:
-            REMOTE:
-            HUMAN:
+            case OI_HEADLESS:
+                settings.status = E_HEADLESS;
+                break;
+            case OI_RANDOM:
+                settings.players[player_index++].type = RANDOM;
+                break;
+            case OI_NOVICE:
+                settings.players[player_index++].type = NOVICE;
+                break;
+            case OI_MINIMAX:
+                settings.players[player_index].minimax_level = 0;
+                settings.players[player_index++].type = MINIMAX;
+                break;
+            case OI_REMOTE:
+                settings.players[player_index++].type = REMOTE;
+                break;
+            case OI_HUMAN:
+                settings.players[player_index++].type = HUMAN;
+                break;
             default:
                 throw "parse_cmd_params: unrecongized player type";
                 break;
-       }
+        }
     }
 
     return settings;
