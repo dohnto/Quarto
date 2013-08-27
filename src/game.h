@@ -30,11 +30,11 @@ private:
 signals:
     /// Finishes the application.
     void finished();
-    
+
 public slots:
     /// Starts the actual application (called from main).
     void run();
-
+//
     /// Called by QCoreAppliction before quitting.
     void aboutToQuitApp();
     
