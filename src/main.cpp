@@ -30,6 +30,14 @@ enum optionIndex {
     OI_HUMAN
 };
 
+
+struct Arg: public option::Arg {
+    static option::ArgStatus Required(const option::Option& option, bool)
+    {
+        return option.arg == 0 ? option::ARG_ILLEGAL : option::ARG_OK;
+    }
+};
+
 const option::Descriptor usage[] = {
     {OI_UNKNOWN, 0, "",  "", option::Arg::None,     "USAGE: Quatro [OPTIONS] PLAYER PLAYER \n\n"
                                                  "Options:" },
@@ -38,12 +46,12 @@ const option::Descriptor usage[] = {
                                                  "Players:"},
     {OI_RANDOM,  0, "", "random", option::Arg::None, "  --random   \tRandom player." },
     {OI_NOVICE,  0, "", "novice", option::Arg::None, "  --novice   \tNovice player." },
-    {OI_MINIMAX, 0, "", "minimax", option::Arg::None, "  --minimax   \tMinimax player with given depth level." },
+    {OI_MINIMAX, 0, "", "minimax", Arg::Required, "  --minimax   \tMinimax player with given depth level." },
     {OI_REMOTE,  0, "", "remote", option::Arg::None, "  --remote   \tRemote player on given port." },
     {OI_HUMAN,   0, "", "human", option::Arg::None, "  --human   \tHuman player." },
- //   {UNKNOWN, 0, "" ,  ""   , option::Arg::None, "\nExamples:\n"
- //                                                "  example --unknown -- --this_is_no_option\n"
- //                                                "  example -unk --plus -ppp file1 file2\n" },
+    {OI_UNKNOWN, 0, "" ,  ""   , option::Arg::None, "\nExamples:\n"
+                                                 "  Quatro --random --random\n"
+                                                 "  Quatro --random --minimax 4\n" },
       {0,0,0,0,0,0}
 };
 
@@ -151,10 +159,11 @@ settings_t parse_cmd_params(int argc, char *argv[])
                 settings.players[player_index++].type = NOVICE;
                 break;
             case OI_MINIMAX:
-                settings.players[player_index].minimax_level = 0;
+                settings.players[player_index].minimax_level = atoi(opt.arg);
                 settings.players[player_index++].type = MINIMAX;
                 break;
             case OI_REMOTE:
+                // TODO port, ip
                 settings.players[player_index++].type = REMOTE;
                 break;
             case OI_HUMAN:
