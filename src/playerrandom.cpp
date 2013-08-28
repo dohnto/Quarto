@@ -32,5 +32,3 @@ QPair<unsigned, unsigned> PlayerRandom::chooseField()
     QList<QPair<unsigned, unsigned> > freeFields = board->getFreeFields();
     return freeFields[rand() % freeFields.size()];
 }
-
-

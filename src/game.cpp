@@ -27,20 +27,67 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) : QObject(parent)
  * Controls the game state.
  */
 void Game::run() {
+    bool finished = false;
     Piece* piece = turn->choosePiece();
     qDebug() << piece->toString();
 
     //board->debugFillMatrix();
-
-    for (unsigned i = 0; i < 3; i++) {                                  // TODO change
+    while (!finished) {
         turn = getOpponent(turn);
         piece = turn->move(piece);
+        finished = checkFinished();
         board->printMatrix();
         board->printStock();
         // check situation                          // TODO
     }
 
     quit();
+}
+
+bool Game::checkFinished()
+{
+    if (board->getFreeFields().size() == 0)
+        return true;
+
+    QList<Piece *> fields;
+
+    // check diagonals
+    for (unsigned i = 0; i < MATRIX_SIZE; ++i)
+        fields.append(board->getMatrix()[i][i]);
+
+    if (Piece::checkFinishedFields(fields))
+        return true;
+
+    fields.clear();
+
+    for (unsigned i = 0; i < MATRIX_SIZE; ++i)
+        fields.append(board->getMatrix()[i][MATRIX_SIZE - 1 - i]);
+
+    if (Piece::checkFinishedFields(fields))
+        return true;
+
+    // check top-down
+    for (unsigned i = 0; i < MATRIX_SIZE; ++i) {
+        fields.clear();
+        for (unsigned j = 0; j < MATRIX_SIZE; ++j)
+            fields.append(board->getMatrix()[i][j]);
+
+        if (Piece::checkFinishedFields(fields))
+            return true;
+
+    }
+
+
+    // check left-right
+    for (unsigned i = 0; i < MATRIX_SIZE; ++i) {
+        fields.clear();
+        for (unsigned j = 0; j < MATRIX_SIZE; ++j)
+            fields.append(board->getMatrix()[j][i]);
+
+        if (Piece::checkFinishedFields(fields))
+            return true;
+    }
+    return false;
 }
 
 /**

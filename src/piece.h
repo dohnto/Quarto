@@ -22,6 +22,9 @@ public:
     bool isSquare() { return properties & PIECE_SQUARE; }
 
     QString toString();
+
+    static bool checkFinishedFields(QList<Piece *> & fields);
+    unsigned getProperties() { return properties; }
 private:
     const unsigned char properties;
     void print();
