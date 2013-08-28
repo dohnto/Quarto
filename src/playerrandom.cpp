@@ -1,23 +1,37 @@
 #include "playerrandom.h"
 
+#include <time.h>
+
 PlayerRandom::PlayerRandom(Board *board, QObject *parent) :
     Player(board, parent)
 {
-
+    srand (time(NULL));
 }
 
 
 Piece *PlayerRandom::choosePiece()
 {
-    qDebug() << "Vybiram figurku";
-    return NULL;
+    QList<Piece *> & stock = board->getStock();
+
+    if (stock.size() <= 0)
+        throw "choosePiece: no piece to choose";
+
+    unsigned indexChoosen = rand() % stock.size();
+    Piece *choosen = stock[indexChoosen];
+    stock.removeAt(indexChoosen);
+
+    return choosen;
 }
 
 /**
- * @brief Player::playPiece plays given piece
+ * @brief PlayerRandom::playPiece plays given piece
  */
 void PlayerRandom::playPiece(Piece *piece)
 {
-    qDebug() << "Hraju figurku";
+    QList<QPair<unsigned, unsigned> > freeSpots = board->getFreeSpots();
+    QPair<unsigned, unsigned> choosen = freeSpots[rand() % freeSpots.size()];
+
+    Piece ***matrix = board->getMatrix();
+    matrix[choosen.first][choosen.second] = piece;
 }
 

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QString>
 
 const unsigned char PIECE_SMALL     = 1;
 const unsigned char PIECE_BLUE      = 2;
@@ -20,6 +21,7 @@ public:
     bool isHollow() { return properties & PIECE_HOLLOW; }
     bool isSquare() { return properties & PIECE_SQUARE; }
 
+    QString toString();
 private:
     const unsigned char properties;
     void print();

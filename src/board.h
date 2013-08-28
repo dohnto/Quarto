@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QPair>
 
 #include "common.h"
 #include "piece.h"
@@ -18,6 +19,11 @@ public:
     /** Prints current stock with options */
     void printStock();
 
+    QList<Piece *> & getStock() { return stock; }
+    Piece ***getMatrix() { return matrix; }
+
+    QList<QPair<unsigned, unsigned> > getFreeSpots();
+
     /** TODO smazat! */
     void debugFillMatrix() {
         matrix[0][0] = stock[0];
@@ -31,6 +37,8 @@ public:
         matrix[3][1] = stock[14];
         matrix[3][2] = stock[15];
     }
+
+
 
 private:
     QList<Piece *> stock;

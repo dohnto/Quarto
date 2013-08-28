@@ -46,7 +46,7 @@ const option::Descriptor usage[] = {
                                                  "Players:"},
     {OI_RANDOM,  0, "", "random", option::Arg::None, "  --random   \tRandom player." },
     {OI_NOVICE,  0, "", "novice", option::Arg::None, "  --novice   \tNovice player." },
-    {OI_MINIMAX, 0, "", "minimax", Arg::Required, "  --minimax   \tMinimax player with given depth level." },
+    {OI_MINIMAX, 0, "", "minimax", Arg::Required, "  --minimax L  \tMinimax player with given depth level L." },
     {OI_REMOTE,  0, "", "remote", option::Arg::None, "  --remote   \tRemote player on given port." },
     {OI_HUMAN,   0, "", "human", option::Arg::None, "  --human   \tHuman player." },
     {OI_UNKNOWN, 0, "" ,  ""   , option::Arg::None, "\nExamples:\n"

@@ -1,6 +1,8 @@
 #ifndef PLAYERRANDOM_H
 #define PLAYERRANDOM_H
 
+#include <QPair>
+
 #include "player.h"
 
 class PlayerRandom : public Player

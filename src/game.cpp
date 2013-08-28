@@ -13,12 +13,12 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) : QObject(parent)
 
     // create essential objects
 
+    board   = new Board(this);
     player1 = createPlayer(p1);
     player2 = createPlayer(p2);
 
     turn = player2;
 
-    board   = new Board(this);
     //piece   = new Piece(this);
 }
 
@@ -28,17 +28,17 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) : QObject(parent)
  */
 void Game::run() {
     Piece* piece = turn->choosePiece();
+    qDebug() << piece->toString();
+
+    //board->debugFillMatrix();
+
     for (unsigned i = 0; i < 3; i++) {                                  // TODO change
-        qDebug() << "---------------------";
         turn = getOpponent(turn);
         piece = turn->move(piece);
+        board->printMatrix();
+        board->printStock();
         // check situation                          // TODO
     }
-
-    // TODO debug - smazat!
-    board->debugFillMatrix();
-    board->printMatrix();
-    board->printStock();
 
     quit();
 }

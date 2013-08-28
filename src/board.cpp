@@ -67,23 +67,22 @@ void Board::printStock()
     cout << endl;
 }
 
+QList<QPair<unsigned, unsigned> > Board::getFreeSpots()
+{
+    QList<QPair<unsigned, unsigned> > retval;
+    for (unsigned i = 0; i < MATRIX_SIZE; ++i)
+        for (unsigned j = 0; j < MATRIX_SIZE; ++j)
+            if (matrix[i][j] == NULL)
+                retval.append(QPair<unsigned, unsigned> (i,j));
+    return retval;
+}
+
 /**
  * @brief Creates textual representation of the piece.
  * @param piece Piece pointer
  * @return string representing piece's propeties
  */
-QString Board::piece2str(Piece *piece) {
-    QString pieceStr(5, ' ');
-
-    if(piece == NULL) {
-        pieceStr = "  .  ";
-    } else {
-        pieceStr[1] = piece->isSquare() ? '[' : '(';
-        pieceStr[3] = piece->isSquare() ? ']' : ')';
-        pieceStr[2] = piece->isBlue() ? piece->isSmall() ? 'b' : 'B' :
-                                        piece->isSmall() ? 'r' : 'R';
-        if(piece->isHollow()) pieceStr.insert(3, '*');
-    }
-
-    return pieceStr;
+QString Board::piece2str(Piece *piece)
+{
+    return (piece == NULL) ? "  .  " : piece->toString();
 }

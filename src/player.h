@@ -15,7 +15,7 @@ public:
     Piece *move(Piece *);
     virtual Piece *choosePiece() = 0;
 
-private:
+protected:
     Board *board;
 
     virtual void playPiece(Piece *) = 0;
