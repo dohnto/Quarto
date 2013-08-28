@@ -27,8 +27,6 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) : QObject(parent)
  * Controls the game state.
  */
 void Game::run() {
-    qDebug() << "Game is running";                  // TODO delete
-
     Piece* piece = turn->choosePiece();
     for (unsigned i = 0; i < 3; i++) {                                  // TODO change
         qDebug() << "---------------------";
@@ -36,6 +34,11 @@ void Game::run() {
         piece = turn->move(piece);
         // check situation                          // TODO
     }
+
+    // TODO debug - smazat!
+    board->debugFillMatrix();
+    board->printMatrix();
+    board->printStock();
 
     quit();
 }
