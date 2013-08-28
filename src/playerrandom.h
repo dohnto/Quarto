@@ -12,7 +12,8 @@ public:
     Piece *choosePiece();
 
 private:
-    void playPiece(Piece *piece);
+    QPair<unsigned, unsigned> chooseField();
+
 };
 
 #endif // PLAYERRANDOM_H

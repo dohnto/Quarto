@@ -6,6 +6,7 @@
 #include "common.h"
 #include "optionparser/optionparser.h"
 
+// states that can occur by changing command line arguments
 enum status_t {
     E_OK,
     E_HEADLESS,
@@ -13,6 +14,7 @@ enum status_t {
     E_CMD_ERROR
 };
 
+// settings of whole program
 struct settings_t {
     status_t status;
     player_t players[PLAYER_COUNT];

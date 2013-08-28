@@ -22,7 +22,7 @@ public:
     QList<Piece *> & getStock() { return stock; }
     Piece ***getMatrix() { return matrix; }
 
-    QList<QPair<unsigned, unsigned> > getFreeSpots();
+    QList<QPair<unsigned, unsigned> > getFreeFields();
 
     /** TODO smazat! */
     void debugFillMatrix() {

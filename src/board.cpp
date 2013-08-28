@@ -67,7 +67,11 @@ void Board::printStock()
     cout << endl;
 }
 
-QList<QPair<unsigned, unsigned> > Board::getFreeSpots()
+/**
+ * @brief Board::getFreeSpots finds all free spots in matrix
+ * @return pairs of indexes to matrix
+ */
+QList<QPair<unsigned, unsigned> > Board::getFreeFields()
 {
     QList<QPair<unsigned, unsigned> > retval;
     for (unsigned i = 0; i < MATRIX_SIZE; ++i)

@@ -4,9 +4,12 @@ Piece::Piece(unsigned char properties, QObject *parent) :
     QObject(parent),
     properties(properties)
 {
-    print();
 }
 
+/**
+ * @brief Piece::toString serialize piece to string
+ * @return
+ */
 QString Piece::toString()
 {
     QString pieceStr(5, ' ');
@@ -18,9 +21,4 @@ QString Piece::toString()
         pieceStr.insert(3, '*');
 
     return pieceStr;
-}
-
-void Piece::print()
-{
-    //qDebug() << "I am piece, my properties are " << isSmall() << isBlue() << isHollow() << isSquare();
 }

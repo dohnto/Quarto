@@ -24,14 +24,13 @@ Piece *PlayerRandom::choosePiece()
 }
 
 /**
- * @brief PlayerRandom::playPiece plays given piece
+ * @brief PlayerRandom::chooseField randomly choose field
+ * @return
  */
-void PlayerRandom::playPiece(Piece *piece)
+QPair<unsigned, unsigned> PlayerRandom::chooseField()
 {
-    QList<QPair<unsigned, unsigned> > freeSpots = board->getFreeSpots();
-    QPair<unsigned, unsigned> choosen = freeSpots[rand() % freeSpots.size()];
-
-    Piece ***matrix = board->getMatrix();
-    matrix[choosen.first][choosen.second] = piece;
+    QList<QPair<unsigned, unsigned> > freeFields = board->getFreeFields();
+    return freeFields[rand() % freeFields.size()];
 }
+
 

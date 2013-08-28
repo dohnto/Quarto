@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QPair>
 #include "piece.h"
 #include "board.h"
 
@@ -18,7 +19,8 @@ public:
 protected:
     Board *board;
 
-    virtual void playPiece(Piece *) = 0;
+    void playPiece(Piece *);
+    virtual QPair<unsigned, unsigned> chooseField() = 0;
 
 signals:
     

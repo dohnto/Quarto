@@ -66,7 +66,12 @@ Player *Game::getOpponent(Player *player)
         throw "getOpponent: invalid given player";  // TODO
 }
 
-Player *Game::createPlayer(player_t &player)
+/**
+ * @brief Game::createPlayer creates a player according to given structure
+ * @param player
+ * @return
+ */
+Player *Game::createPlayer(struct player_t &player)
 {
     Player *retval = NULL;
     switch (player.type) {

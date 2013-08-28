@@ -15,3 +15,13 @@ Piece *Player::move(Piece *piece)
     playPiece(piece);
     return choosePiece();
 }
+
+/**
+ * @brief PlayerRandom::playPiece plays given piece
+ */
+void Player::playPiece(Piece *piece)
+{
+    Piece ***matrix = board->getMatrix();
+    QPair<unsigned, unsigned> choosen = chooseField();
+    matrix[choosen.first][choosen.second] = piece;
+}

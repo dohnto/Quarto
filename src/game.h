@@ -29,7 +29,7 @@ private:
     Board   *board;
     
     Player *getOpponent(Player *);
-    Player *createPlayer(player_t & player);
+    Player *createPlayer(struct player_t & player);
 signals:
     /// Finishes the application.
     void finished();
