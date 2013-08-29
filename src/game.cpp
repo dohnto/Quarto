@@ -27,35 +27,33 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) : QObject(parent)
  * Controls the game state.
  */
 void Game::run() {
-    bool finished = false;
     Piece* piece = turn->choosePiece();
-    qDebug() << piece->toString();
 
-    //board->debugFillMatrix();
-    while (!finished) {
+    while (!checkVictory() && piece != NULL) {
         turn = getOpponent(turn);
         piece = turn->move(piece);
-        finished = checkFinished();
         board->printMatrix();
         board->printStock();
-        // check situation                          // TODO
+    }
+
+    if (checkVictory()) { // someone has won
+        qDebug() << "Someone has won!";
+    } else { // draw
+        qDebug() << "It is a draw!";
     }
 
     quit();
 }
 
-bool Game::checkFinished()
+bool Game::checkVictory()
 {
-    if (board->getFreeFields().size() == 0)
-        return true;
-
     QList<Piece *> fields;
 
     // check diagonals
     for (unsigned i = 0; i < MATRIX_SIZE; ++i)
         fields.append(board->getMatrix()[i][i]);
 
-    if (Piece::checkFinishedFields(fields))
+    if (Piece::checkVictoryFields(fields))
         return true;
 
     fields.clear();
@@ -63,7 +61,7 @@ bool Game::checkFinished()
     for (unsigned i = 0; i < MATRIX_SIZE; ++i)
         fields.append(board->getMatrix()[i][MATRIX_SIZE - 1 - i]);
 
-    if (Piece::checkFinishedFields(fields))
+    if (Piece::checkVictoryFields(fields))
         return true;
 
     // check top-down
@@ -72,7 +70,7 @@ bool Game::checkFinished()
         for (unsigned j = 0; j < MATRIX_SIZE; ++j)
             fields.append(board->getMatrix()[i][j]);
 
-        if (Piece::checkFinishedFields(fields))
+        if (Piece::checkVictoryFields(fields))
             return true;
 
     }
@@ -84,7 +82,7 @@ bool Game::checkFinished()
         for (unsigned j = 0; j < MATRIX_SIZE; ++j)
             fields.append(board->getMatrix()[j][i]);
 
-        if (Piece::checkFinishedFields(fields))
+        if (Piece::checkVictoryFields(fields))
             return true;
     }
     return false;

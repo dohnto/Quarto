@@ -14,7 +14,7 @@ Piece *PlayerRandom::choosePiece()
     QList<Piece *> & stock = board->getStock();
 
     if (stock.size() <= 0)
-        throw "choosePiece: no piece to choose";
+        return NULL;
 
     unsigned indexChoosen = rand() % stock.size();
     Piece *choosen = stock[indexChoosen];

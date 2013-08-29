@@ -30,7 +30,7 @@ private:
     
     Player *getOpponent(Player *);
     Player *createPlayer(struct player_t & player);
-    bool checkFinished();
+    bool checkVictory();
 signals:
     /// Finishes the application.
     void finished();

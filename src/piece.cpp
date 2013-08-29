@@ -23,7 +23,7 @@ QString Piece::toString()
     return pieceStr;
 }
 
-bool Piece::checkFinishedFields(QList<Piece *> & fields)
+bool Piece::checkVictoryFields(QList<Piece *> & fields)
 {
     unsigned properties = PIECE_BLUE | PIECE_HOLLOW | PIECE_SMALL | PIECE_SQUARE;
 
