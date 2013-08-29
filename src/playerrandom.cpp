@@ -2,8 +2,8 @@
 
 #include <time.h>
 
-PlayerRandom::PlayerRandom(Board *board, QObject *parent) :
-    Player(board, parent)
+PlayerRandom::PlayerRandom(QString name, Board *board, QObject *parent) :
+    Player(name, board, parent)
 {
     srand (time(NULL));
 }
@@ -27,7 +27,7 @@ Piece *PlayerRandom::choosePiece()
  * @brief PlayerRandom::chooseField randomly choose field
  * @return
  */
-QPair<unsigned, unsigned> PlayerRandom::chooseField()
+QPair<unsigned, unsigned> PlayerRandom::chooseField(Piece *piece)
 {
     QList<QPair<unsigned, unsigned> > freeFields = board->getFreeFields();
     return freeFields[rand() % freeFields.size()];

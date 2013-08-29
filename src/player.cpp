@@ -1,6 +1,7 @@
 #include "player.h"
 
-Player::Player(Board *board, QObject *parent) : QObject(parent), board(board)
+Player::Player(QString name, Board *board, QObject *parent) :
+    QObject(parent), board(board), name(name)
 {
 
 }
@@ -22,6 +23,6 @@ Piece *Player::move(Piece *piece)
 void Player::playPiece(Piece *piece)
 {
     Piece ***matrix = board->getMatrix();
-    QPair<unsigned, unsigned> choosen = chooseField();
+    QPair<unsigned, unsigned> choosen = chooseField(piece);
     matrix[choosen.first][choosen.second] = piece;
 }

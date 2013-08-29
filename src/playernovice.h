@@ -1,12 +1,16 @@
 #ifndef PLAYERNOVICE_H
 #define PLAYERNOVICE_H
 
-#include "player.h"
+#include "playerrandom.h"
 
-class PlayerNovice // : public Player
+class PlayerNovice  : public PlayerRandom
 {
 public:
-    PlayerNovice();
+    PlayerNovice(QString name, Board *board, QObject *parent = 0);
+    Piece *choosePiece();
+
+private:
+    QPair<unsigned, unsigned> chooseField(Piece *piece);
 };
 
 #endif // PLAYERNOVICE_H

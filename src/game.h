@@ -5,6 +5,7 @@
 #include <QObject>
 #include "player.h"
 #include "playerrandom.h"
+#include "playernovice.h"
 #include "board.h"
 #include "piece.h"
 #include "common.h"

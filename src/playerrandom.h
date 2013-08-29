@@ -8,11 +8,11 @@
 class PlayerRandom : public Player
 {
 public:
-    explicit PlayerRandom(Board *board, QObject *parent = 0);
+    explicit PlayerRandom(QString name, Board *board, QObject *parent = 0);
     Piece *choosePiece();
 
-private:
-    QPair<unsigned, unsigned> chooseField();
+protected:
+    QPair<unsigned, unsigned> chooseField(Piece *piece);
 
 };
 

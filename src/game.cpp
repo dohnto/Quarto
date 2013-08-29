@@ -37,7 +37,7 @@ void Game::run() {
     }
 
     if (checkVictory()) { // someone has won
-        qDebug() << "Someone has won!";
+        qDebug() <<  turn->getName() << " has won!";
     } else { // draw
         qDebug() << "It is a draw!";
     }
@@ -121,7 +121,10 @@ Player *Game::createPlayer(struct player_t &player)
     Player *retval = NULL;
     switch (player.type) {
     case RANDOM:
-        retval = new PlayerRandom(board, this);
+        retval = new PlayerRandom("Random", board, this);
+        break;
+    case NOVICE:
+        retval = new PlayerNovice("Novice", board, this);
         break;
     // TODO
     default:

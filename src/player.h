@@ -11,16 +11,18 @@ class Player : public QObject
 {
     Q_OBJECT
 public:
-    explicit Player(Board *board, QObject *parent = 0);
+    explicit Player(QString name, Board *board, QObject *parent = 0);
 
     Piece *move(Piece *);
     virtual Piece *choosePiece() = 0;
+    QString & getName() { return name; }
 
 protected:
     Board *board;
+    QString name;
 
     void playPiece(Piece *);
-    virtual QPair<unsigned, unsigned> chooseField() = 0;
+    virtual QPair<unsigned, unsigned> chooseField(Piece *) = 0;
 
 signals:
     
