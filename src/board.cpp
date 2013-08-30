@@ -20,6 +20,20 @@ Board::Board(QObject *parent) : QObject(parent)
     }
 }
 
+Board::Board(Board & other)
+{
+    stock = other.getStock();
+
+    // allocate matrix
+    matrix = new Piece**[MATRIX_SIZE];
+    for (unsigned i = 0; i < MATRIX_SIZE; i++) {
+        matrix[i] = new Piece*[MATRIX_SIZE];
+        for (unsigned j = 0; j < MATRIX_SIZE; j++) {
+            matrix[i][j] = other.getMatrix()[i][j];
+        }
+    }
+}
+
 Board::~Board()
 {
     // deallocate whole matrix
@@ -89,4 +103,52 @@ QList<QPair<unsigned, unsigned> > Board::getFreeFields()
 QString Board::piece2str(Piece *piece)
 {
     return (piece == NULL) ? "  .  " : piece->toString();
+}
+
+/**
+ * @brief Board::checkVictory check if there isnt placed winning combination of
+ * pieces.
+ * @return
+ * @IDEA: precalculate coordinates, eg 11,22,33,44 for diagonal instead duing it in iteration
+ *        or unwrap iterations by gcc
+ */
+bool Board::checkVictory()
+{
+    QList<Piece *> fields;
+
+    // check diagonals
+    for (unsigned i = 0; i < MATRIX_SIZE; ++i)
+        fields.append(matrix[i][i]);
+
+    if (Piece::checkVictoryFields(fields))
+        return true;
+
+    fields.clear();
+
+    for (unsigned i = 0; i < MATRIX_SIZE; ++i)
+        fields.append(matrix[i][MATRIX_SIZE - 1 - i]);
+
+    if (Piece::checkVictoryFields(fields))
+        return true;
+
+    // check top-down
+    for (unsigned i = 0; i < MATRIX_SIZE; ++i) {
+        fields.clear();
+        for (unsigned j = 0; j < MATRIX_SIZE; ++j)
+            fields.append(matrix[i][j]);
+
+        if (Piece::checkVictoryFields(fields))
+            return true;
+    }
+
+    // check left-right
+    for (unsigned i = 0; i < MATRIX_SIZE; ++i) {
+        fields.clear();
+        for (unsigned j = 0; j < MATRIX_SIZE; ++j)
+            fields.append(matrix[j][i]);
+
+        if (Piece::checkVictoryFields(fields))
+            return true;
+    }
+    return false;
 }

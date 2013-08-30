@@ -18,8 +18,6 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) : QObject(parent)
     player2 = createPlayer(p2);
 
     turn = player2;
-
-    //piece   = new Piece(this);
 }
 
 /**
@@ -29,14 +27,14 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) : QObject(parent)
 void Game::run() {
     Piece* piece = turn->choosePiece();
 
-    while (!checkVictory() && piece != NULL) {
+    while (!board->checkVictory() && piece != NULL) {
         turn = getOpponent(turn);
         piece = turn->move(piece);
         board->printMatrix();
         board->printStock();
     }
 
-    if (checkVictory()) { // someone has won
+    if (board->checkVictory()) { // someone has won
         qDebug() <<  turn->getName() << " has won!";
     } else { // draw
         qDebug() << "It is a draw!";
@@ -44,50 +42,6 @@ void Game::run() {
 
     quit();
 }
-
-bool Game::checkVictory()
-{
-    QList<Piece *> fields;
-
-    // check diagonals
-    for (unsigned i = 0; i < MATRIX_SIZE; ++i)
-        fields.append(board->getMatrix()[i][i]);
-
-    if (Piece::checkVictoryFields(fields))
-        return true;
-
-    fields.clear();
-
-    for (unsigned i = 0; i < MATRIX_SIZE; ++i)
-        fields.append(board->getMatrix()[i][MATRIX_SIZE - 1 - i]);
-
-    if (Piece::checkVictoryFields(fields))
-        return true;
-
-    // check top-down
-    for (unsigned i = 0; i < MATRIX_SIZE; ++i) {
-        fields.clear();
-        for (unsigned j = 0; j < MATRIX_SIZE; ++j)
-            fields.append(board->getMatrix()[i][j]);
-
-        if (Piece::checkVictoryFields(fields))
-            return true;
-
-    }
-
-
-    // check left-right
-    for (unsigned i = 0; i < MATRIX_SIZE; ++i) {
-        fields.clear();
-        for (unsigned j = 0; j < MATRIX_SIZE; ++j)
-            fields.append(board->getMatrix()[j][i]);
-
-        if (Piece::checkVictoryFields(fields))
-            return true;
-    }
-    return false;
-}
-
 /**
  * Quits the application
  */

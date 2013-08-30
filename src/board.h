@@ -13,6 +13,8 @@ class Board : public QObject
     Q_OBJECT
 public:
     explicit Board(QObject *parent = 0);
+    Board(Board & other);
+
     ~Board();  
     /** Prints current board state with coordinates */
     void printMatrix();
@@ -23,22 +25,7 @@ public:
     Piece ***getMatrix() { return matrix; }
 
     QList<QPair<unsigned, unsigned> > getFreeFields();
-
-    /** TODO smazat! */
-    void debugFillMatrix() {
-        matrix[0][0] = stock[0];
-        matrix[0][2] = stock[1];
-        matrix[1][0] = stock[3];
-        matrix[1][3] = stock[5];
-        matrix[2][1] = stock[7];
-        matrix[2][2] = stock[9];
-        matrix[3][0] = stock[12];
-        matrix[3][3] = stock[13];
-        matrix[3][1] = stock[14];
-        matrix[3][2] = stock[15];
-    }
-
-
+    bool checkVictory();
 
 private:
     QList<Piece *> stock;
