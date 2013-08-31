@@ -1,3 +1,10 @@
+dodelat: 
+    zabalit boardu matrix i stock, 
+    checkVictory bude delat board s odkrytim implementace
+    doku
+    sitova hra + protokol
+    vypisy kdo hraje
+
 Classes
 =======
 

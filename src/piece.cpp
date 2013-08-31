@@ -23,18 +23,3 @@ QString Piece::toString()
     return pieceStr;
 }
 
-bool Piece::checkVictoryFields(QList<Piece *> & fields)
-{
-    unsigned properties = PIECE_BLUE | PIECE_HOLLOW | PIECE_SMALL | PIECE_SQUARE;
-
-    QList<Piece *>::iterator it = fields.begin();
-    for (; it != fields.end(); it++) {
-        Piece *piece = *it;
-        if (piece == NULL)
-            return false;
-
-        properties &= piece->getProperties();
-    }
-
-    return properties;
-}

@@ -23,7 +23,6 @@ public:
 
     QString toString();
 
-    static bool checkVictoryFields(QList<Piece *> & fields);
     unsigned getProperties() { return properties; }
 private:
     const unsigned char properties;

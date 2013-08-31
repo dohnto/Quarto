@@ -120,7 +120,7 @@ bool Board::checkVictory()
     for (unsigned i = 0; i < MATRIX_SIZE; ++i)
         fields.append(matrix[i][i]);
 
-    if (Piece::checkVictoryFields(fields))
+    if (checkVictoryFields(fields))
         return true;
 
     fields.clear();
@@ -128,7 +128,7 @@ bool Board::checkVictory()
     for (unsigned i = 0; i < MATRIX_SIZE; ++i)
         fields.append(matrix[i][MATRIX_SIZE - 1 - i]);
 
-    if (Piece::checkVictoryFields(fields))
+    if (checkVictoryFields(fields))
         return true;
 
     // check top-down
@@ -137,7 +137,7 @@ bool Board::checkVictory()
         for (unsigned j = 0; j < MATRIX_SIZE; ++j)
             fields.append(matrix[i][j]);
 
-        if (Piece::checkVictoryFields(fields))
+        if (checkVictoryFields(fields))
             return true;
     }
 
@@ -147,8 +147,33 @@ bool Board::checkVictory()
         for (unsigned j = 0; j < MATRIX_SIZE; ++j)
             fields.append(matrix[j][i]);
 
-        if (Piece::checkVictoryFields(fields))
+        if (checkVictoryFields(fields))
             return true;
     }
     return false;
+}
+
+
+void Board::putPiece(const QPair<unsigned, unsigned> & index, Piece *piece)
+{
+    if (matrix[index.first][index.second] != NULL) {
+        throw "Cannot put piece on piece";
+    }
+    matrix[index.first][index.second] = piece;
+}
+
+bool Board::checkVictoryFields(const QList<Piece *> & fields)
+{
+    unsigned properties = PIECE_BLUE | PIECE_HOLLOW | PIECE_SMALL | PIECE_SQUARE;
+
+    QList<Piece *>::const_iterator it = fields.begin();
+    for (; it != fields.end(); it++) {
+        Piece *piece = *it;
+        if (piece == NULL)
+            return false;
+
+        properties &= piece->getProperties();
+    }
+
+    return properties;
 }

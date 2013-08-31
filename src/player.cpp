@@ -22,7 +22,6 @@ Piece *Player::move(Piece *piece)
  */
 void Player::playPiece(Piece *piece)
 {
-    Piece ***matrix = board->getMatrix();
     QPair<unsigned, unsigned> choosen = chooseField(piece);
-    matrix[choosen.first][choosen.second] = piece;
+    board->putPiece(choosen, piece);
 }

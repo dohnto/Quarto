@@ -11,15 +11,14 @@ PlayerRandom::PlayerRandom(QString name, Board *board, QObject *parent) :
 
 Piece *PlayerRandom::choosePiece()
 {
-    QList<Piece *> & stock = board->getStock();
+    const QList<Piece *> & stock = board->getStock();
 
     if (stock.size() <= 0)
         return NULL;
 
     unsigned indexChoosen = rand() % stock.size();
     Piece *choosen = stock[indexChoosen];
-    stock.removeAt(indexChoosen);
-
+    board->removeFromStockAt(indexChoosen);
     return choosen;
 }
 
