@@ -30,6 +30,8 @@ public:
     void removeFromStockAt(unsigned index) { stock.removeAt(index); }
     void putPiece(const QPair<unsigned, unsigned> & index, Piece *piece);
     bool checkVictoryFields(const QList<Piece *> & fields);
+
+    void deleteStock(Piece *piece) { stock.removeAll(piece); }
 private:
     QList<Piece *> stock;
     Piece ***matrix;

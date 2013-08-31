@@ -6,7 +6,9 @@
  *
  * @param parent a pointer to the parent
  */
-Game::Game(player_t & p1, player_t & p2, QObject *parent) : QObject(parent)
+Game::Game(player_t & p1, player_t & p2, QObject *parent) :
+    QObject(parent),
+    playerCounter(0)
 {
     // Get the instance of the main application
     app = QCoreApplication::instance();
@@ -26,8 +28,9 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) : QObject(parent)
  */
 void Game::run() {
     Piece* piece = turn->choosePiece();
-
+    board->deleteStock(piece);
     while (!board->checkVictory() && piece != NULL) {
+        qDebug() << turn->getName() << " turn, play with piece: " << piece->toString();
         turn = getOpponent(turn);
         piece = turn->move(piece);
         board->printMatrix();
@@ -72,13 +75,14 @@ Player *Game::getOpponent(Player *player)
  */
 Player *Game::createPlayer(struct player_t &player)
 {
+    playerCounter++;
     Player *retval = NULL;
     switch (player.type) {
     case RANDOM:
-        retval = new PlayerRandom("Random", board, this);
+        retval = new PlayerRandom(QString(playerCounter+'0').append("-Random"), board, this);
         break;
     case NOVICE:
-        retval = new PlayerNovice("Novice", board, this);
+        retval = new PlayerNovice(QString(playerCounter+'0').append("-Novice"), board, this);
         break;
     // TODO
     default:

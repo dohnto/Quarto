@@ -10,7 +10,7 @@ Piece::Piece(unsigned char properties, QObject *parent) :
  * @brief Piece::toString serialize piece to string
  * @return
  */
-QString Piece::toString()
+QString Piece::toString() const
 {
     QString pieceStr(5, ' ');
 

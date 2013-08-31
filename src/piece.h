@@ -16,12 +16,12 @@ class Piece : public QObject
 public:
     explicit Piece(unsigned char properties, QObject *parent = 0);
     
-    bool isSmall()  { return properties & PIECE_SMALL; }
-    bool isBlue()   { return properties & PIECE_BLUE; }
-    bool isHollow() { return properties & PIECE_HOLLOW; }
-    bool isSquare() { return properties & PIECE_SQUARE; }
+    bool isSmall()  const { return properties & PIECE_SMALL; }
+    bool isBlue()   const { return properties & PIECE_BLUE; }
+    bool isHollow() const { return properties & PIECE_HOLLOW; }
+    bool isSquare() const { return properties & PIECE_SQUARE; }
 
-    QString toString();
+    QString toString() const;
 
     unsigned getProperties() { return properties; }
 private:

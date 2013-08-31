@@ -3,6 +3,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QObject>
+#include <iostream>
 #include "player.h"
 #include "playerrandom.h"
 #include "playernovice.h"
@@ -24,6 +25,7 @@ public:
 private:
     QCoreApplication *app;  /**< ??? TODO */
     Player *turn;           /**< whose turn is it */
+    unsigned playerCounter;
 
     Player  *player1;
     Player  *player2;
