@@ -1,5 +1,8 @@
 #include <QDebug>
 #include "game.h"
+#include "playerremote.h"
+#include "playerrandom.h"
+#include "playernovice.h"
 
 /**
  * Constructor
@@ -84,6 +87,8 @@ Player *Game::createPlayer(struct player_t &player)
     case NOVICE:
         retval = new PlayerNovice(QString(playerCounter+'0').append("-Novice"), board, this);
         break;
+    case REMOTE:
+        retval = new PlayerRemote(QString(playerCounter+'0').append("-Remote"), player.additional, board, this);
     // TODO
     default:
         throw "NOT IMPLEMENTED";
