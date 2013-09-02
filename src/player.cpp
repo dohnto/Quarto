@@ -13,16 +13,8 @@ Player::Player(QString name, Board *board, QObject *parent) :
  */
 Piece *Player::move(Piece *piece)
 {
-    playPiece(piece);
-    return choosePiece();
-}
-
-/**
- * @brief PlayerRandom::playPiece plays given piece
- */
-void Player::playPiece(Piece *piece)
-{
-    Piece ***matrix = board->getMatrix();
-    QPair<unsigned, unsigned> choosen = chooseField(piece);
-    matrix[choosen.first][choosen.second] = piece;
+    board->putPiece(chooseField(piece), piece);
+    piece = choosePiece();
+    board->deleteStock(piece);
+    return piece;
 }

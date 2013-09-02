@@ -2,25 +2,30 @@
 
 #include <time.h>
 
+#ifdef __unix__
+    #include <unistd.h>
+#endif
+
 PlayerRandom::PlayerRandom(QString name, Board *board, QObject *parent) :
     Player(name, board, parent)
 {
-    srand (time(NULL));
+#ifdef __unix__
+    srand(time(NULL) * getpid());
+#else
+    srand(time(NULL));
+#endif
 }
 
 
 Piece *PlayerRandom::choosePiece()
 {
-    QList<Piece *> & stock = board->getStock();
+    const QList<Piece *> & stock = board->getStock();
 
     if (stock.size() <= 0)
         return NULL;
 
     unsigned indexChoosen = rand() % stock.size();
-    Piece *choosen = stock[indexChoosen];
-    stock.removeAt(indexChoosen);
-
-    return choosen;
+    return stock[indexChoosen];
 }
 
 /**

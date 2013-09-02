@@ -21,12 +21,17 @@ public:
     /** Prints current stock with options */
     void printStock();
 
-    QList<Piece *> & getStock() { return stock; }
-    Piece ***getMatrix() { return matrix; }
+    const QList<Piece *> & getStock() const { return stock; }
+    Piece ***getMatrix() const { return matrix; }
 
     QList<QPair<unsigned, unsigned> > getFreeFields();
     bool checkVictory();
 
+    void removeFromStockAt(unsigned index) { stock.removeAt(index); }
+    void putPiece(const QPair<unsigned, unsigned> & index, Piece *piece);
+    bool checkVictoryFields(const QList<Piece *> & fields);
+
+    void deleteStock(Piece *piece) { stock.removeAll(piece); }
 private:
     QList<Piece *> stock;
     Piece ***matrix;

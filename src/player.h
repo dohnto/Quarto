@@ -21,7 +21,6 @@ protected:
     Board *board;
     QString name;
 
-    void playPiece(Piece *);
     virtual QPair<unsigned, unsigned> chooseField(Piece *) = 0;
 
 signals:

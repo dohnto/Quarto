@@ -49,7 +49,7 @@ const option::Descriptor usage[] = {
     {OI_RANDOM,  0, "", "random", option::Arg::None, "  --random   \tRandom player." },
     {OI_NOVICE,  0, "", "novice", option::Arg::None, "  --novice   \tNovice player." },
     {OI_MINIMAX, 0, "", "minimax", Arg::Required, "  --minimax L  \tMinimax player with given depth level L." },
-    {OI_REMOTE,  0, "", "remote", option::Arg::None, "  --remote   \tRemote player on given port." },
+    {OI_REMOTE,  0, "", "remote", Arg::Required, "  --remote IP:PORT  \tRemote player on given ip & port." },
     {OI_HUMAN,   0, "", "human", option::Arg::None, "  --human   \tHuman player." },
     {OI_UNKNOWN, 0, "" ,  ""   , option::Arg::None, "\nExamples:\n"
                                                  "  Quatro --random --random\n"
@@ -165,7 +165,7 @@ settings_t parse_cmd_params(int argc, char *argv[])
                 settings.players[player_index++].type = MINIMAX;
                 break;
             case OI_REMOTE:
-                // TODO port, ip
+                settings.players[player_index].additional = QString(opt.arg);
                 settings.players[player_index++].type = REMOTE;
                 break;
             case OI_HUMAN:
