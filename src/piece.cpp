@@ -16,7 +16,7 @@ QString Piece::toString()
 
     pieceStr[1] = isSquare() ? '[' : '(';
     pieceStr[3] = isSquare() ? ']' : ')';
-    pieceStr[2] = isBlue() ? isSmall() ? 'b' : 'B' : isSmall() ? 'r' : 'R';
+    pieceStr[2] = isBlue() ? (isSmall() ? 'b' : 'B') : (isSmall() ? 'r' : 'R');
     if(isHollow())
         pieceStr.insert(3, '*');
 

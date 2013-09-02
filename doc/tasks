@@ -3,14 +3,12 @@
 - vypis board a stock			hon							OK
 - kostra rizeni hry - Game		tom							OK
 - kontrola stavu hry							
-- player - move					tom
-	- random					hon
-	- novice					tom
-	- minimax					tom,hon
+- player - move					tom							OK
+	- random					tom							OK
+	- novice					tom							OK
+	- minimax					hon
 		- alfa-beta strom
 		- hodnotici fce
 - vymyslet protokol				tom,hon,ostatni typci
-- implementovat sitovou hru		hon
-
-
-- psani doku					tom,hon
+- implementovat sitovou hru		tom
+- psani doku (latex)			tom,hon
