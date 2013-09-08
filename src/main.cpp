@@ -57,6 +57,7 @@ const option::Descriptor usage[] = {
       {0,0,0,0,0,0}
 };
 
+// Declarations
 settings_t parse_cmd_params(int argc, char *argv[]);
 
 /**

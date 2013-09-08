@@ -3,7 +3,7 @@
 
 #include "playerrandom.h"
 
-class PlayerNovice  : public PlayerRandom
+class PlayerNovice : public PlayerRandom
 {
 public:
     PlayerNovice(QString name, Board *board, QObject *parent = 0);

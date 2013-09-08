@@ -6,6 +6,7 @@
 #include <QPair>
 #include "piece.h"
 #include "board.h"
+#include "common.h"
 
 class Player : public QObject
 {

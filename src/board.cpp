@@ -20,6 +20,9 @@ Board::Board(QObject *parent) : QObject(parent)
     }
 }
 
+/**
+ * Copy constructor
+ */
 Board::Board(Board & other)
 {
     stock = other.getStock();
@@ -36,7 +39,7 @@ Board::Board(Board & other)
 
 Board::~Board()
 {
-    // deallocate whole matrix
+    // deallocate the whole matrix
     for (unsigned i = 0; i < MATRIX_SIZE; ++i)
         delete[] matrix[i];
     delete[] matrix;

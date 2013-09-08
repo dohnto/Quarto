@@ -3,6 +3,7 @@
 #include "playerremote.h"
 #include "playerrandom.h"
 #include "playernovice.h"
+#include "playerminimax.h"
 
 /**
  * Constructor
@@ -87,9 +88,11 @@ Player *Game::createPlayer(struct player_t &player)
     case NOVICE:
         retval = new PlayerNovice(QString(playerCounter+'0').append("-Novice"), board, this);
         break;
+    case MINIMAX:
+        retval = new PlayerMiniMax(QString(playerCounter+'0').append("-Minimax"), player.minimax_level ,board, this);
+        break;
     case REMOTE:
-        retval = new PlayerRemote(QString(playerCounter+'0').append("-Remote"), player.additional, board, this);
-    // TODO
+        retval = new PlayerRemote(QString(playerCounter+'0').append("-Remote"), player.additional, board, this);  
     default:
         throw "NOT IMPLEMENTED";
         break;
