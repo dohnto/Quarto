@@ -3,14 +3,15 @@
 #include <QStack>
 
 PlayerMiniMax::PlayerMiniMax(QString name, unsigned depth, Board *board, QObject *parent) :
-    PlayerNovice(name, board, parent), depth(depth)
+    PlayerNovice(name, board, parent), maxDepth(maxDepth)
 {
+    bestPiece = NULL;
+    bestPos.first = bestPos.second = 0;
 }
 
 Piece* PlayerMiniMax::choosePiece()
 {
-    Piece* piece = NULL;
-    return piece;
+    return (bestPiece == NULL) ? PlayerRandom::choosePiece() : bestPiece;
 }
 
 /**
@@ -19,38 +20,71 @@ Piece* PlayerMiniMax::choosePiece()
  */
 QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
 {
-    int alpha = INIT_ALPHA;
-    int beta  = INIT_BETA;
+    // generate search tree
+    alphabeta(board, piece, 1, INIT_ALPHA, INIT_BETA, true);
 
-    // TODO
-    QPair<unsigned, unsigned> pair;
-    return pair;
+    return bestPos;
 }
 
-QPair<int, int> PlayerMiniMax::place(Piece *piece, int alpha, int beta, unsigned D)
+/**
+ * Tree generation with alpha beta pruning
+ */
+int PlayerMiniMax::alphabeta(Board* board, Piece* piece, unsigned D, int alpha, int beta, bool maximize)
 {
-    // max tree depth reached
-    if(D > depth) {
-        // TODO
-        // call evaluation function
-        // return alpha/beta
+    if(D > maxDepth) {
+        return evalGameState(board, piece);
     }
 
-    QStack<Board*> boards;
-    QPair<unsigned, unsigned> pos;
+    QPair<unsigned, unsigned> possibleField;
+    Board *possibleBoard = NULL;
+    Piece *possiblePiece = NULL;
+    int alphaNew, betaNew;
 
-    // expanding one level of adversarial tree
-    foreach(pos, board->getFreeFields()) {
-        boards.push(new Board(*board));
-        boards.top()->putPiece(pos, piece);
+    foreach(possibleField, board->getFreeFields()) {
+        possibleBoard = new Board(*board);
+        possibleBoard->putPiece(possibleField, piece);
+
+        foreach(possiblePiece, possibleBoard->getStock()) {
+            // maximizing player
+            if(maximize) {
+                alphaNew = alphabeta(possibleBoard, possiblePiece, D + 1, alpha, beta, !maximize);
+
+                // pruning
+                if(alphaNew >= beta) {
+                    break;
+                }
+
+                if(alphaNew > alpha) {
+                    alpha = alphaNew;
+
+                    if(D == 1) {
+                        bestPiece = possiblePiece;
+                        bestPos   = possibleField;
+                    }
+                }
+            }
+            // minimizing player
+            else {
+                betaNew = alphabeta(possibleBoard, possiblePiece, D + 1, alpha, beta, maximize);
+
+                // pruning
+                if(betaNew <= alpha) {
+                    break;
+                }
+
+                if(betaNew < beta) {
+                    beta = betaNew;
+                }
+            }
+        }
     }
 
-    // TODO
-    QPair<int, int> pair;
-    return pair;
+    return maximize ? alpha : beta;
 }
 
-
-QPair<int, int> PlayerMiniMax::choose(int alpha, int beta)
+int PlayerMiniMax::evalGameState(Board* board, Piece* piece)
 {
+    // TODO - implement! :-D
+
+    return rand() % (2 * INIT_ALPHA + 1) - INIT_ALPHA;
 }
