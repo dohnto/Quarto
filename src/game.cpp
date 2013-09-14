@@ -44,21 +44,20 @@ void Game::run() {
     board->printStock();
 
     Piece* piece = turn->choosePiece();
-
     board->deletePieceFromStock(piece);
-    std::cout << turn->getName().toStdString() << " chooses first piece: " << piece->toString().toStdString();
+    std::cout << turn->getName().toStdString() << " choosed first piece: " << piece->toString().toStdString() << std::endl;
 
     try {
         //while (!board->checkVictory() && piece != NULL) {
         while (piece != NULL) {
             turn = getOpponent(turn);
+            std::cout << "----------------------------------------------------------" << std::endl;
             std::cout << turn->getName().toStdString() << "'s turn, play with piece: " << piece->toString().toStdString() << std::endl;
             piece = turn->move(piece);
-            std::cout << turn->getName().toStdString() << " have played the piece and have choosen a piece for opponent." << std::endl;
+            std::cout << turn->getName().toStdString() << " played the piece and choosed a piece for opponent." << std::endl;
             std::cout << "You can see the position below" << std::endl;
             board->printMatrix();
             board->printStock();
-            std::cout << "----------------------------------------------------------" << std::endl;
         }
     } catch (const char * excpt) {
         qDebug() << excpt;

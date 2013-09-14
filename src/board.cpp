@@ -53,7 +53,7 @@ void Board::printMatrix()
     QTextStream cout(stdout);
 
     cout << endl;
-    cout << "     X     Y     Z     W   " << endl;
+    cout << "     W     X     Y     Z   " << endl;
     cout << "  -------------------------" << endl;
 
     for(unsigned int r = 0; r < MATRIX_SIZE; r++) {
