@@ -7,23 +7,24 @@ PlayerNovice::PlayerNovice(QString name, Board *board, QObject *parent):
 
 Piece *PlayerNovice::choosePiece()
 {
-    const QList<Piece *> & stock = board->getStock();
+    QList<Piece *> stock(board->getStock());
 
     if (stock.size() <= 0)
         return NULL;
 
-    QList<Piece *>::const_iterator it = stock.begin();
-    for (; it != stock.end(); it++) {
+    QList<Piece *>::iterator it = stock.begin();
+    while (it != stock.end()) {
         Board possibleBoard(*board);
         possibleBoard.putPiece(chooseField(*it), *it);
-        if (!possibleBoard.checkVictory()) {
-//            qDebug() << "====================";
-//            qDebug() << (*it)->toString();
-            return *it;
-        }
+        if (!possibleBoard.checkVictory())
+            ++it;
+        else
+            it = stock.erase(it);
     }
 
-    return PlayerRandom::choosePiece();
+    QList<Piece *> stockToBePassed = (stock.size() != 0) ? stock : board->getStock();
+
+    return PlayerRandom::choosePieceFromStock(stockToBePassed);
 }
 
 QPair<unsigned, unsigned> PlayerNovice::chooseField(Piece *piece)

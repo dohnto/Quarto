@@ -11,7 +11,7 @@ PlayerMiniMax::PlayerMiniMax(QString name, unsigned depth, Board *board, QObject
 
 Piece* PlayerMiniMax::choosePiece()
 {
-    return (bestPiece == NULL) ? PlayerRandom::choosePiece() : bestPiece;
+    return (bestPiece == NULL) ? PlayerNovice::choosePiece() : bestPiece;
 }
 
 /**

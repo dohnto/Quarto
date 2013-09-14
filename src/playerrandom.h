@@ -13,6 +13,7 @@ public:
 
 protected:
     QPair<unsigned, unsigned> chooseField(Piece *piece);
+    Piece *choosePieceFromStock(const QList<Piece *> & stock);
 
 };
 

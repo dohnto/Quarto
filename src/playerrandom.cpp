@@ -16,16 +16,27 @@ PlayerRandom::PlayerRandom(QString name, Board *board, QObject *parent) :
 #endif
 }
 
-
-Piece *PlayerRandom::choosePiece()
+/**
+ * @brief PlayerRandom::choosePieceFromStock Player randomly choose piece from given stock
+ * @param stock
+ * @return piece if stock is not empty, NULL otherwise
+ */
+Piece *PlayerRandom::choosePieceFromStock(const QList<Piece *> & stock)
 {
-    const QList<Piece *> & stock = board->getStock();
-
     if (stock.size() <= 0)
         return NULL;
 
     unsigned indexChoosen = rand() % stock.size();
     return stock[indexChoosen];
+}
+
+/**
+ * @brief PlayerRandom::choosePiece Player randomly choose piece from board stock
+ * @return piece if stock is not empty, NULL otherwise
+ */
+Piece *PlayerRandom::choosePiece()
+{
+    return choosePieceFromStock(board->getStock());
 }
 
 /**

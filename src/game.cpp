@@ -4,6 +4,7 @@
 #include "playerrandom.h"
 #include "playernovice.h"
 #include "playerminimax.h"
+#include <iostream>
 
 /**
  * Constructor
@@ -34,17 +35,24 @@ void Game::run() {
     Piece* piece = turn->choosePiece();
     board->deleteStock(piece);
     while (!board->checkVictory() && piece != NULL) {
-        qDebug() << turn->getName() << " turn, play with piece: " << piece->toString();
         turn = getOpponent(turn);
+        std::cout << turn->getName().toUtf8().constData() << "'s turn, play with piece: " << piece->toString().toUtf8().constData() << std::endl;
         piece = turn->move(piece);
+        std::cout << turn->getName().toUtf8().constData() << " have played the piece and have choosen a piece for opponent." << std::endl;
+        std::cout << "You can see the position below" << std::endl;
         board->printMatrix();
         board->printStock();
+        std::cout << "----------------------------------------------------------" << std::endl;
     }
 
     if (board->checkVictory()) { // someone has won
-        qDebug() <<  turn->getName() << " has won!";
+        std::cout << turn->getName().toUtf8().constData() << " has won!" << std::endl;
     } else { // draw
-        qDebug() << "It is a draw!";
+        if (board->getStock().size() != 0) {
+            qDebug() << "Tohle se nesmi nikdy stat!";
+            quit();
+        }
+        std::cout << "It is a draw!" << std::endl;
     }
 
     quit();
@@ -89,7 +97,7 @@ Player *Game::createPlayer(struct player_t &player)
         retval = new PlayerNovice(QString(playerCounter+'0').append("-Novice"), board, this);
         break;
     case MINIMAX:
-        retval = new PlayerMiniMax(QString(playerCounter+'0').append("-Minimax"), player.minimax_level ,board, this);
+        retval = new PlayerMiniMax(QString(playerCounter+'0').append("-Minimax"), player.minimax_level, board, this);
         break;
     case REMOTE:
         retval = new PlayerRemote(QString(playerCounter+'0').append("-Remote"), player.additional, board, this);  
