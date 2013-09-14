@@ -11,6 +11,7 @@ public:
 
 private:
     QPair<unsigned, unsigned> chooseField(Piece *piece);
+    unsigned getCoordToPutPiece(bool row);
 };
 
 #endif // PLAYERHUMAN_H

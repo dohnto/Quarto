@@ -4,6 +4,7 @@
 #include "playerrandom.h"
 #include "playernovice.h"
 #include "playerminimax.h"
+#include "playerhuman.h"
 #include <iostream>
 
 /**
@@ -34,15 +35,15 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) :
 void Game::run() {
     Piece* piece = turn->choosePiece();
 
-    board->deleteStock(piece);
-    qDebug() << turn->getName() << " chooses first piece: " << piece->toString();
+    board->deletePieceFromStock(piece);
+    std::cout << turn->getName().toStdString() << " chooses first piece: " << piece->toString().toStdString();
 
     try {
         while (!board->checkVictory() && piece != NULL) {
             turn = getOpponent(turn);
-            std::cout << turn->getName().toUtf8().constData() << "'s turn, play with piece: " << piece->toString().toUtf8().constData() << std::endl;
+            std::cout << turn->getName().toStdString() << "'s turn, play with piece: " << piece->toString().toStdString() << std::endl;
             piece = turn->move(piece);
-            std::cout << turn->getName().toUtf8().constData() << " have played the piece and have choosen a piece for opponent." << std::endl;
+            std::cout << turn->getName().toStdString() << " have played the piece and have choosen a piece for opponent." << std::endl;
             std::cout << "You can see the position below" << std::endl;
             board->printMatrix();
             board->printStock();
@@ -105,10 +106,14 @@ Player *Game::createPlayer(struct player_t &player)
         retval = new PlayerNovice(QString(playerCounter+'0').append("-Novice"), board, this);
         break;
     case MINIMAX:
-        retval = new PlayerMiniMax(QString(playerCounter+'0').append("-Minimax"), player.minimax_level, board, this);
+        retval = new PlayerMiniMax(QString(playerCounter+'0').append("-Minimax-"), player.minimax_level, board, this);
         break;
     case REMOTE:
         retval = new PlayerRemote(QString(playerCounter+'0').append("-Remote"), player.additional, board, this);  
+        break;
+    case HUMAN:
+        retval = new PlayerHuman(QString(playerCounter+'0').append("-Human"), board, this);
+        break;
     default:
         throw "NOT IMPLEMENTED";
         break;

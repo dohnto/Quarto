@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     // Starts the execution after 10ms in the Game.run() routine.
     QTimer::singleShot(10, &game, SLOT(run()));
 
-    int retval;
+    int retval = 0;
     try {
         retval = app.exec();
     } catch (const char * excpt) {

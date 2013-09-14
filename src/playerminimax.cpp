@@ -31,7 +31,7 @@ QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
         bestPos = board->getFreeFields().first();
         bestPiece = NULL;
     } else {
-        alphabeta(board, piece, 1, INIT_ALPHA, INIT_BETA, true);
+        std::cerr << "Alfabeta = " << alphabeta(board, piece, 1, INIT_ALPHA, INIT_BETA, true) << std::endl;
     }
 
     return bestPos;
@@ -58,16 +58,11 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
         possibleBoard->putPiece(possibleField, piece);
 
         foreach(possiblePiece, possibleBoard->getStock()) {
-            possibleBoard->deleteStock(possiblePiece);
+            possibleBoard->deletePieceFromStock(possiblePiece);
 
             // maximizing player
             if(maximize) {
                 alphaNew = alphabeta(possibleBoard, possiblePiece, D + 1, alpha, beta, !maximize);
-
-                // pruning
-                if(alphaNew >= beta) {
-                    break;
-                }
 
                 if(alphaNew > alpha) {
                     alpha = alphaNew;
@@ -77,20 +72,27 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
                         bestPos   = possibleField;
                     }
                 }
+
+                // pruning
+                if(alphaNew >= beta) {
+                    break;
+                }
             }
             // minimizing player
             else {
                 betaNew = alphabeta(possibleBoard, possiblePiece, D + 1, alpha, beta, maximize);
 
+                if(betaNew < beta) {
+                    beta = betaNew;
+                }
+
                 // pruning
                 if(betaNew <= alpha) {
                     break;
                 }
-
-                if(betaNew < beta) {
-                    beta = betaNew;
-                }
             }
+
+            possibleBoard->addPieceToStock(possiblePiece);
         }
 
         delete possibleBoard;
@@ -102,7 +104,7 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
 int PlayerMiniMax::evalGameState(Board* board, Piece* piece)
 {
     if (board->checkVictory()) {
-        std::cout << "check victory\n";
+        //std::cerr << "pes\n";
         return INIT_BETA;
     }
 

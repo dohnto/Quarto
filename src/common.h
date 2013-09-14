@@ -9,7 +9,7 @@ const unsigned  PLAYER_COUNT        = 2;
 const int       INIT_ALPHA          = -1024;
 const int       INIT_BETA           = 1024;
 const unsigned  QUARTO_MOVES        = 16;
-const unsigned  NOVICE_MOVES_COUNT  = 10;
+const unsigned  NOVICE_MOVES_COUNT  = 6;
 
 enum player_e {
     RANDOM,

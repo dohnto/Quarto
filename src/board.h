@@ -31,7 +31,8 @@ public:
     void putPiece(const QPair<unsigned, unsigned> & index, Piece *piece);
     bool checkVictoryFields(const QList<Piece *> & fields);
 
-    void deleteStock(Piece *piece) { stock.removeAll(piece); }
+    void deletePieceFromStock(Piece *piece) { stock.removeAll(piece); }
+    void addPieceToStock(Piece *piece) { stock.append(piece); }
 private:
     QList<Piece *> stock;
     Piece ***matrix;
