@@ -1,6 +1,7 @@
 #include "playerminimax.h"
 #include "board.h"
 #include <QStack>
+#include <iostream>
 
 PlayerMiniMax::PlayerMiniMax(QString name, unsigned maxDepth,
                              Board *board, QObject *parent) :
@@ -42,8 +43,9 @@ QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
 int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
                              unsigned D, int alpha, int beta, bool maximize)
 {
-    if((D > maxDepth) || (board->getStock().isEmpty())) {
-        return evalGameState(board, piece);
+    if((D > maxDepth) || (board->getStock().isEmpty()) || board->checkVictory()) {
+        int boardScore = evalGameState(board, piece);
+        return maximize ? -boardScore : boardScore;
     }
 
     QPair<unsigned, unsigned> possibleField;
@@ -99,7 +101,10 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
 
 int PlayerMiniMax::evalGameState(Board* board, Piece* piece)
 {
-    // TODO - just implement it would ya? :-D
+    if (board->checkVictory()) {
+        std::cout << "check victory\n";
+        return INIT_BETA;
+    }
 
-    return rand() % (2 * INIT_BETA + 1) - INIT_BETA;
+    return 0;
 }
