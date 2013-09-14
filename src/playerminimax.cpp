@@ -43,7 +43,8 @@ QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
 int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
                              unsigned D, int alpha, int beta, bool maximize)
 {
-    if((D > maxDepth) || (board->getStock().isEmpty()) || board->checkVictory()) {
+    //if((D > maxDepth) || (board->getStock().isEmpty()) || board->checkVictory()) {
+    if((D > maxDepth) || (board->getStock().isEmpty())) {
         int boardScore = evalGameState(board, piece);
         return maximize ? -boardScore : boardScore;
     }
@@ -73,8 +74,14 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
                     }
                 }
 
-                // pruning
-                if(alphaNew >= beta) {
+                std::cout << "alphaNew = " << alphaNew << std::endl;
+                std::cout << "beta = " << beta << std::endl;
+                std::cout << "alphaNew >= beta : " << (alphaNew >= beta ? "true" : "false") << std::endl;
+
+                bool res = alphaNew >= beta;
+
+                // pruning                
+                if(res) {
                     break;
                 }
             }
@@ -103,10 +110,13 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
 
 int PlayerMiniMax::evalGameState(Board* board, Piece* piece)
 {
-    if (board->checkVictory()) {
-        //std::cerr << "pes\n";
-        return INIT_BETA;
-    }
+    static int i = 0;
+    static int retvals[12] = {8,3,-15,19,38,100,1,0,-90,-12,14,40};
 
-    return 0;
+//    if (board->checkVictory()) {
+//        //std::cerr << "pes\n";
+//        return INIT_BETA;
+//    }
+
+    return retvals[i++];
 }

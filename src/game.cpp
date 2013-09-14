@@ -33,13 +33,24 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) :
  * Controls the game state.
  */
 void Game::run() {
+
+    // TODO smazat
+    for(int i = 0; i < 13; i++) {
+        board->putPiece(board->getFreeFields().first(), board->getStock().first());
+        board->deletePieceFromStock(board->getStock().first());
+    }
+
+    board->printMatrix();
+    board->printStock();
+
     Piece* piece = turn->choosePiece();
 
     board->deletePieceFromStock(piece);
     std::cout << turn->getName().toStdString() << " chooses first piece: " << piece->toString().toStdString();
 
     try {
-        while (!board->checkVictory() && piece != NULL) {
+        //while (!board->checkVictory() && piece != NULL) {
+        while (piece != NULL) {
             turn = getOpponent(turn);
             std::cout << turn->getName().toStdString() << "'s turn, play with piece: " << piece->toString().toStdString() << std::endl;
             piece = turn->move(piece);
