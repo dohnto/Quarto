@@ -81,7 +81,7 @@ void Board::printStock()
         cout << piece2str(stock[i]);
         cout << qSetFieldWidth(0);
     }
-    cout << endl;
+    cout << endl << endl;
 }
 
 /**

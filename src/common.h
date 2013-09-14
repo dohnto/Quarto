@@ -6,8 +6,8 @@
 const unsigned  PIECE_COUNT     = 16;
 const unsigned  MATRIX_SIZE     = 4;
 const unsigned  PLAYER_COUNT    = 2;
-const int       INIT_ALPHA      = 1024;
-const int       INIT_BETA       = -1024;
+const int       INIT_ALPHA      = -1024;
+const int       INIT_BETA       = 1024;
 
 enum player_e {
     RANDOM,

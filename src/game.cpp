@@ -33,17 +33,25 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) :
  */
 void Game::run() {
     Piece* piece = turn->choosePiece();
+
     board->deleteStock(piece);
-    while (!board->checkVictory() && piece != NULL) {
-        turn = getOpponent(turn);
-        std::cout << turn->getName().toUtf8().constData() << "'s turn, play with piece: " << piece->toString().toUtf8().constData() << std::endl;
-        piece = turn->move(piece);
-        std::cout << turn->getName().toUtf8().constData() << " have played the piece and have choosen a piece for opponent." << std::endl;
-        std::cout << "You can see the position below" << std::endl;
-        board->printMatrix();
-        board->printStock();
-        std::cout << "----------------------------------------------------------" << std::endl;
+    qDebug() << turn->getName() << " chooses first piece: " << piece->toString();
+
+    try {
+        while (!board->checkVictory() && piece != NULL) {
+            turn = getOpponent(turn);
+            std::cout << turn->getName().toUtf8().constData() << "'s turn, play with piece: " << piece->toString().toUtf8().constData() << std::endl;
+            piece = turn->move(piece);
+            std::cout << turn->getName().toUtf8().constData() << " have played the piece and have choosen a piece for opponent." << std::endl;
+            std::cout << "You can see the position below" << std::endl;
+            board->printMatrix();
+            board->printStock();
+            std::cout << "----------------------------------------------------------" << std::endl;
+        }
+    } catch (const char * excpt) {
+        qDebug() << excpt;
     }
+
 
     if (board->checkVictory()) { // someone has won
         std::cout << turn->getName().toUtf8().constData() << " has won!" << std::endl;

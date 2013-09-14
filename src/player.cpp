@@ -15,6 +15,6 @@ Piece *Player::move(Piece *piece)
 {
     board->putPiece(chooseField(piece), piece);
     piece = choosePiece();
-    board->deleteStock(piece);
+    board->deleteStock(piece);    
     return piece;
 }
