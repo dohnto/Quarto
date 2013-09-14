@@ -21,6 +21,10 @@ Piece* PlayerMiniMax::choosePiece()
  */
 QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
 {            
+    if(board->getStock().size() > (QUARTO_MOVES - NOVICE_MOVES_COUNT)) {
+        return PlayerNovice::chooseField(piece);
+    }
+
     // generate search tree
     if(board->getStock().isEmpty()) { /* last free field */
         bestPos = board->getFreeFields().first();

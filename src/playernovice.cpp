@@ -15,7 +15,7 @@ Piece *PlayerNovice::choosePiece()
     QList<Piece *>::iterator it = stock.begin();
     while (it != stock.end()) {
         Board possibleBoard(*board);
-        possibleBoard.putPiece(chooseField(*it), *it);
+        possibleBoard.putPiece(PlayerNovice::chooseField(*it), *it);
         if (!possibleBoard.checkVictory())
             ++it;
         else

@@ -9,7 +9,7 @@ public:
     PlayerNovice(QString name, Board *board, QObject *parent = 0);
     Piece *choosePiece();
 
-private:
+protected:
     QPair<unsigned, unsigned> chooseField(Piece *piece);
 };
 
