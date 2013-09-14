@@ -32,13 +32,21 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) :
  */
 void Game::run() {
     Piece* piece = turn->choosePiece();
-    board->deleteStock(piece);
-    while (!board->checkVictory() && piece != NULL) {
-        qDebug() << turn->getName() << " turn, play with piece: " << piece->toString();
-        turn = getOpponent(turn);
-        piece = turn->move(piece);
-        board->printMatrix();
-        board->printStock();
+    board->deleteStock(piece);    
+    qDebug() << turn->getName() << " chooses first piece: " << piece->toString();
+    board->printStock();
+
+    try {
+        while (!board->checkVictory() && piece != NULL) {
+            turn = getOpponent(turn);
+            qDebug() << turn->getName() << "plays with piece: " << piece->toString();
+            piece = turn->move(piece);
+            qDebug() << turn->getName() << "chooses piece: " << ((piece == NULL) ? "NULL" : piece->toString());
+            board->printMatrix();
+            board->printStock();
+        }
+    } catch (const char * excpt) {
+        qDebug() << excpt;
     }
 
     if (board->checkVictory()) { // someone has won
