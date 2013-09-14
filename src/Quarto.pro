@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     playerrandom.cpp \
     playernovice.cpp \
     playerminimax.cpp \
-    playerremote.cpp
+    playerremote.cpp \
+    playerhuman.cpp
 
 HEADERS += \
     game.h \
@@ -35,4 +36,5 @@ HEADERS += \
     playernovice.h \
     playerminimax.h \
     optionparser/optionparser.h \
-    playerremote.h
+    playerremote.h \
+    playerhuman.h
