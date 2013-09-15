@@ -2,6 +2,7 @@
 #include "board.h"
 #include <QStack>
 #include <iostream>
+#include <cassert>
 
 PlayerMiniMax::PlayerMiniMax(QString name, unsigned maxDepth,
                              Board *board, QObject *parent) :
@@ -31,10 +32,10 @@ QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
         bestPos = board->getFreeFields().first();
         bestPiece = NULL;
     } else {
-        struct AlphaBetaResult result = alphabetaX(board, piece, maxDepth, INIT_ALPHA, INIT_BETA, true);
+        struct AlphaBetaResult result = alphabetaX(board, piece, maxDepth, MINUS_INF, PLUS_INF, true);
         bestPos = result.field;
         bestPiece = result.piece;
-
+        std::cout << "alfabeta = " << result.score << std::endl;
         //std::cerr << "Alfabeta = " << alphabeta(board, piece, 1, INIT_ALPHA, INIT_BETA, true) << std::endl;
     }
 
@@ -92,13 +93,13 @@ struct AlphaBetaResult PlayerMiniMax::alphabetaX(Board *board, Piece *piece, uns
             possibleBoard->addPieceToStock(possiblePiece);
         }
 
+        delete possibleBoard;
+
+
         if (alpha >= beta) {
             break;
         }
-
-        delete possibleBoard;
     }
-
 
     bestMove.score = maximize ? alpha : beta;
     return bestMove;
@@ -107,6 +108,7 @@ struct AlphaBetaResult PlayerMiniMax::alphabetaX(Board *board, Piece *piece, uns
 /**
  * Tree generation with alpha beta pruning
  */
+/*
 int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
                              unsigned D, int alpha, int beta, bool maximize)
 {
@@ -153,12 +155,12 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
 
 
 
-                if(betaNew < beta) {
+                if (betaNew < beta) {
                     beta = betaNew;
                 }
 
                 // pruning
-                if(betaNew <= alpha) {
+                if (betaNew <= alpha) {
                     break;
                 }
 
@@ -171,28 +173,41 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
     }
 
     return maximize ? alpha : beta;
-}
+}*/
 
 int PlayerMiniMax::evalGameState(Board* board, Piece* piece)
 {
-    if (board->checkVictory()) {
+    if (board->checkVictory()) { // victory
         return INIT_BETA;
+    }
+
+    if (board->getStock().size() == 0) {
+        QList<QPair<unsigned, unsigned> > freeFields = board->getFreeFields();
+        assert(freeFields.size() == 1);
+        board->putPiece(freeFields.first(), piece);
+        bool victory = board->checkVictory();
+        board->deletePiece(freeFields.first());
+        if (victory)
+            return -INIT_BETA; // victory of enemy
+        else
+            return 0; // draw
+
     }
 
     int score = 0;
 
-    std::cout << "#########################################################\n";
-    board->printMatrix();
-    board->printStock();
-    std::cout << "piece: " << piece->toString().toStdString() << std::endl;
+//    std::cout << "#########################################################\n";
+//    board->printMatrix();
+//    board->printStock();
+//    std::cout << "piece: " << piece->toString().toStdString() << std::endl;
 
     // remaining pieces
     score += remainingPiecesScore(board, piece);
 
     score += tripletScore();
 
-    std::cout << "score = " << score << std::endl;
-    std::cout << "#########################################################\n";
+//    std::cout << "score = " << score << std::endl;
+//    std::cout << "#########################################################\n";
     return score;
 }
 
@@ -221,7 +236,7 @@ int PlayerMiniMax::remainingPiecesScore(Board *board, Piece *piece)
             possibleBoard->deletePiece(possibleField);
 
             if (victory) {
-                std::cout << "nemuzu hrat s " << chosenPiece->toString().toStdString() << std::endl;
+//              std::cout << "nemuzu hrat s " << chosenPiece->toString().toStdString() << std::endl;
                 remaining--;
                 break;
             }
@@ -231,6 +246,6 @@ int PlayerMiniMax::remainingPiecesScore(Board *board, Piece *piece)
     delete possibleBoard;
 
     // odd : even
-    std::cout << "remaining = " << remaining << std::endl;
+//    std::cout << "remaining = " << remaining << std::endl;
     return (remaining % 2) ? (INIT_BETA - remaining) : (INIT_ALPHA + remaining);
 }

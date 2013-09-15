@@ -59,7 +59,7 @@ void Game::run()
     } else { // draw
         if (board->getStock().size() != 0) {
             qDebug() << "Tohle se nesmi nikdy stat!";
-            quit();
+            exit(1);
         }
         std::cout << "It is a draw!" << std::endl;
     }

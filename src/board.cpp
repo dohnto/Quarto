@@ -160,6 +160,7 @@ bool Board::checkVictory()
 void Board::putPiece(const QPair<unsigned, unsigned> & index, Piece *piece)
 {
     if (matrix[index.first][index.second] != NULL) {
+        qDebug() << "Trying to put" << piece->toString() << "on " << index.first + 1 << QChar(index.second + 'W');
         throw "Cannot put piece on piece";
     }
     matrix[index.first][index.second] = piece;

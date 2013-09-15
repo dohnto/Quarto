@@ -5,9 +5,48 @@ LRED="\e[01;31m"
 
 tmp=`mktemp`
 
-echo -e "1           2           games    win 1 \t win 2 \t draw"
+_run()
+{
+    count=$1
+    A=$2
+    Aname=$3
+    B=$4
+    Bname=$5
+
+    echo "" > $tmp
+
+    for i in {1..$count}; do
+        echo ./Quarto $A $B >> $tmp
+        rc=$?
+        if [ $rc -ne 0 ]; then
+            echo "FAIL. See $tmp"
+            exit
+        fi
+        echo -n .
+    done
+
+    for i in {1..$count}; do
+        echo ./Quarto $B $A >> $tmp
+        rc=$?
+        if [ $rc -ne 0 ]; then
+            echo "FAIL. See $tmp"
+            exit
+        fi  
+    done
+
+    win1=`grep -c "$Aname has won!"` $tmp
+    win2=`grep -c "$Bname has won!"` $tmp
+    draw=`grep -c "draw" $tmp`
+    [ $win1 -ge $win2 ] && echo -ne "$LGREEN" ||echo -ne $LRED
+    echo -e "$Aname \t $Bname \t 2*$count \t $win1 \t $win2 \t $draw"
+}
+
+echo -e "1 \t 2 \t games \t  win 1 \t win 2 \t draw"
 echo    "-------------------------------------------------------"
 
+_run 50 --novice "Novice" --random "Random"
+
+exit
 for i in {1..50}; do ./Quarto   --novice --random  |& tail -n 1; done > $tmp
 for i in {1..50}; do ./Quarto   --random --novice  |& tail -n 1; done >> $tmp
 win1=`grep -c "Novice" $tmp`
