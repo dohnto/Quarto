@@ -5,6 +5,13 @@ PlayerNovice::PlayerNovice(QString name, Board *board, QObject *parent):
 {
 }
 
+/**
+ * @brief PlayerNovice::choosePiece
+ * @return
+ *
+ * Player will choose piece that way, that opponent cannot directly
+ * place given piece and immideately win.
+ */
 Piece *PlayerNovice::choosePiece()
 {
     QList<Piece *> stock(board->getStock());
@@ -27,6 +34,14 @@ Piece *PlayerNovice::choosePiece()
     return PlayerRandom::choosePieceFromStock(stockToBePassed);
 }
 
+/**
+ * @brief PlayerNovice::chooseField
+ * @param piece
+ * @return
+ *
+ * Choose field from free fields in a way, that if it possible to win
+ * due to placing the piece on given field, player will choose that field.
+ */
 QPair<unsigned, unsigned> PlayerNovice::chooseField(Piece *piece)
 {
     QList<QPair<unsigned, unsigned> > freeFields = board->getFreeFields();

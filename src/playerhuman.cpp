@@ -8,6 +8,10 @@ PlayerHuman::PlayerHuman(QString name, Board *board, QObject *parent) :
 {    
 }
 
+/**
+ * @brief PlayerHuman::choosePiece reads piece choises from standard input
+ * @return
+ */
 Piece* PlayerHuman::choosePiece()
 {
     bool correctChoice = false;
@@ -35,6 +39,11 @@ Piece* PlayerHuman::choosePiece()
     return board->getStock()[choice];
 }
 
+/**
+ * @brief PlayerHuman::getCoordToPutPiece writes and reads prompt for reading
+ * row/column input
+ * @param row
+ */
 unsigned PlayerHuman::getCoordToPutPiece(bool row)
 {
     bool correctChoice = false;
@@ -61,6 +70,11 @@ unsigned PlayerHuman::getCoordToPutPiece(bool row)
     return coord;
 }
 
+/**
+ * @brief PlayerHuman::chooseField from standard input
+ * @param piece
+ * @return
+ */
 QPair<unsigned, unsigned> PlayerHuman::chooseField(Piece *piece)
 {
     unsigned row;

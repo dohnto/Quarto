@@ -12,6 +12,13 @@ PlayerMiniMax::PlayerMiniMax(QString name, unsigned maxDepth,
     bestPos.first = bestPos.second = 0;
 }
 
+/**
+ * @brief PlayerMiniMax::choosePiece
+ * @return
+ *
+ * If it cannot find best piece, just let Novice play, otherwise plays piece
+ * saved in best piece.
+ */
 Piece* PlayerMiniMax::choosePiece()
 {
     return (bestPiece == NULL) ? PlayerNovice::choosePiece() : bestPiece;
@@ -43,6 +50,18 @@ QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
     return bestPos;
 }
 
+/**
+ * @brief PlayerMiniMax::alphabeta
+ * @param board represents state of game
+ * @param piece piece to be placed, choosen by opponent
+ * @param depth remaining depth
+ * @param alpha alpha value
+ * @param beta beta value
+ * @param maximize max/min
+ * @return
+ *
+ * Classic recursive alfabeta
+ */
 struct AlphaBetaResult PlayerMiniMax::alphabeta(Board *board, Piece *piece, unsigned depth,
                                                                  int alpha, int beta,
                                                                  bool maximize)
@@ -59,7 +78,7 @@ struct AlphaBetaResult PlayerMiniMax::alphabeta(Board *board, Piece *piece, unsi
         return bestMove;
     }
 
-    if (depth == 0) {
+    if (depth == 0) { // leaf node, evaluate
         bestMove.score = (maximize ? -1 : 1) * evalGameState(board, piece);
         return bestMove;
     }
@@ -69,11 +88,11 @@ struct AlphaBetaResult PlayerMiniMax::alphabeta(Board *board, Piece *piece, unsi
     Board *possibleBoard = NULL;
     Piece *possiblePiece = NULL;
 
-    foreach (possibleField, board->getFreeFields()) {
+    foreach (possibleField, board->getFreeFields()) { // for all fields
         possibleBoard = new Board(*board);
         possibleBoard->putPiece(possibleField, piece);
 
-        foreach(possiblePiece, possibleBoard->getStock()) {
+        foreach(possiblePiece, possibleBoard->getStock()) { // for all pieces
             possibleBoard->deletePieceFromStock(possiblePiece);
 
             if (maximize) {
@@ -84,8 +103,8 @@ struct AlphaBetaResult PlayerMiniMax::alphabeta(Board *board, Piece *piece, unsi
                     bestMove.piece = possiblePiece;
                 }
 
-                if (alpha >= beta) {
-                    break; // todo
+                if (alpha >= beta) { // prune
+                    break;
                 }
             } else { // minimize
                 struct AlphaBetaResult result = alphabeta(possibleBoard, possiblePiece, depth - 1, alpha, beta, true);
@@ -96,7 +115,7 @@ struct AlphaBetaResult PlayerMiniMax::alphabeta(Board *board, Piece *piece, unsi
                     bestMove.piece = possiblePiece;
                 }
 
-                if (alpha >= beta) {
+                if (alpha >= beta) { // prune
                     break;
                 }
             }
@@ -107,7 +126,7 @@ struct AlphaBetaResult PlayerMiniMax::alphabeta(Board *board, Piece *piece, unsi
         delete possibleBoard;
 
 
-        if (alpha >= beta) {
+        if (alpha >= beta) { // prune
             break;
         }
     }
@@ -116,6 +135,15 @@ struct AlphaBetaResult PlayerMiniMax::alphabeta(Board *board, Piece *piece, unsi
     return bestMove;
 }
 
+/**
+ * @brief PlayerMiniMax::lastPieceState
+ * @param board
+ * @param piece
+ * @return
+ *
+ * If last piece has beem choosen and no more pieces in stock, this function
+ * determines if player wins (returns -PLUS_INF) or it is a draw (0).
+ */
 int PlayerMiniMax::lastPieceState(Board *board, Piece *piece)
 {
     QList<QPair<unsigned, unsigned> > freeFields = board->getFreeFields();
@@ -126,6 +154,12 @@ int PlayerMiniMax::lastPieceState(Board *board, Piece *piece)
     return (victory) ?  -PLUS_INF : 0; // loose vs draw
 }
 
+/**
+ * @brief PlayerMiniMax::chooseDepth
+ * @return depth according to how many pieces have been played. It can
+ * that calculate many depths in alfabeta is the search space is reduced
+ * in later states of game.
+ */
 int PlayerMiniMax::chooseDepth()
 {
     unsigned playedPieces = PIECE_COUNT - board->getStock().size();
@@ -166,23 +200,12 @@ int PlayerMiniMax::chooseDepth()
  */
 int PlayerMiniMax::evalGameState(Board* board, Piece* piece)
 {
-//    if (board->checkVictory()) { // victory
-//        return PLUS_INF;
-//    }
-
     int score = 0;
 
     // remaining pieces
     score += remainingPiecesScore(board, piece);
 
-    //score += tripletScore();
-
     return score;
-}
-
-int PlayerMiniMax::tripletScore()
-{
-    return 0;
 }
 
 int PlayerMiniMax::remainingPiecesScore(Board *board, Piece *piece)

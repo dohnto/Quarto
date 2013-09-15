@@ -176,7 +176,6 @@ settings_t parse_cmd_params(int argc, char *argv[])
 //                settings.players[player_index].host_port = QString(opt.arg);
                 settings.players[player_index].host_port.host = QString(opt.arg).left(QString(opt.arg).indexOf(':'));
                 settings.players[player_index].host_port.port = atoi(QString(opt.arg).right(QString(opt.arg).size() - QString(opt.arg).indexOf(':') - 1).toStdString().c_str());
-                qDebug() << settings.players[player_index].host_port.host << settings.players[player_index].host_port.port;
                 settings.players[player_index++].type = REMOTE;
                 break;
             case OI_HUMAN:
