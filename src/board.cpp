@@ -170,16 +170,17 @@ bool Board::checkVictoryFields(const QList<Piece *> & fields)
 {
     unsigned properties = PIECE_BLUE | PIECE_HOLLOW | PIECE_SMALL | PIECE_SQUARE;
     unsigned properties_invert = PIECE_BLUE | PIECE_HOLLOW | PIECE_SMALL | PIECE_SQUARE;
-//    qDebug() << "============";
+    
     QList<Piece *>::const_iterator it = fields.begin();
     for (; it != fields.end(); it++) {
         Piece *piece = *it;
         if (piece == NULL)
             return false;
-  //      qDebug() << piece->getProperties();
         properties &= piece->getProperties();
         properties_invert &= ~piece->getProperties();
     }
 
     return properties || properties_invert;
 }
+
+

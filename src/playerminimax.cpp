@@ -175,13 +175,62 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
 
 int PlayerMiniMax::evalGameState(Board* board, Piece* piece)
 {
-    static int i = 0;
-    static int retvals[12] = {8,3,-15,19,38,100,1,0,-90,-12,14,40};
-
     if (board->checkVictory()) {
-        //std::cerr << "pes\n";
         return INIT_BETA;
     }
 
+    int score = 0;
+
+    std::cout << "#########################################################\n";
+    board->printMatrix();
+    board->printStock();
+    std::cout << "piece: " << piece->toString().toStdString() << std::endl;
+
+    // remaining pieces
+    score += remainingPiecesScore(board, piece);
+
+    score += tripletScore();
+
+    std::cout << "score = " << score << std::endl;
+    std::cout << "#########################################################\n";
+    return score;
+}
+
+int PlayerMiniMax::tripletScore()
+{
     return 0;
+}
+
+int PlayerMiniMax::remainingPiecesScore(Board *board, Piece *piece)
+{
+    Board *possibleBoard = new Board(*board);
+
+    possibleBoard->addPieceToStock(piece);
+    Piece *chosenPiece;
+
+    unsigned remaining = possibleBoard->getStock().size();
+
+    foreach (chosenPiece, possibleBoard->getStock()) {
+        QPair<unsigned, unsigned> possibleField;
+
+        foreach (possibleField, possibleBoard->getFreeFields()) {
+            possibleBoard->putPiece(possibleField, chosenPiece);
+
+            bool victory = possibleBoard->checkVictory();
+
+            possibleBoard->deletePiece(possibleField);
+
+            if (victory) {
+                std::cout << "nemuzu hrat s " << chosenPiece->toString().toStdString() << std::endl;
+                remaining--;
+                break;
+            }
+        }
+    }
+
+    delete possibleBoard;
+
+    // odd : even
+    std::cout << "remaining = " << remaining << std::endl;
+    return (remaining % 2) ? (INIT_BETA - remaining) : (INIT_ALPHA + remaining);
 }

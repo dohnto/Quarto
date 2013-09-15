@@ -37,6 +37,10 @@ private:
                                                                      int alpha, int beta,
                                                                      bool maximize);
     int evalGameState(Board* board, Piece* piece);
+
+
+    int tripletScore();
+    int remainingPiecesScore(Board *board, Piece *piece);
 };
 
 #endif // PLAYERMINIMAX_H

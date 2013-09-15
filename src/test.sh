@@ -49,6 +49,14 @@ draw=`grep -c "draw" $tmp`
 [ $win1 -ge $win2 ] && echo -en "$LRED" ||echo -ne $LGREEN
 echo -e "minimax-2   minimax-3    20      $win1 \t $win2 \t $draw"
 
+for i in {1..10}; do ./Quarto   --minimax 2 --minimax 4 |& tail -n 1; done > $tmp
+for i in {1..10}; do ./Quarto   --minimax 4 --minimax 2 |& tail -n 1; done >> $tmp
+win1=`grep -c "Minimax-2" $tmp`
+win2=`grep -c "Minimax-4" $tmp`
+draw=`grep -c "draw" $tmp`
+[ $win1 -ge $win2 ] && echo -en "$LRED" ||echo -ne $LGREEN
+echo -e "minimax-2   minimax-4    20      $win1 \t $win2 \t $draw"
+
 
 for i in {1..10}; do ./Quarto   --minimax 3 --minimax 4 |& tail -n 1; done > $tmp
 for i in {1..10}; do ./Quarto   --minimax 4 --minimax 3 |& tail -n 1; done >> $tmp
