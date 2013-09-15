@@ -32,24 +32,14 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) :
  * Main game function. Creates the objects of Player, Board, Piece.
  * Controls the game state.
  */
-void Game::run() {
-
-    // TODO smazat
-    for(int i = 0; i < 13; i++) {
-        board->putPiece(board->getFreeFields().first(), board->getStock().first());
-        board->deletePieceFromStock(board->getStock().first());
-    }
-
-    board->printMatrix();
-    board->printStock();
-
+void Game::run()
+{
     Piece* piece = turn->choosePiece();
     board->deletePieceFromStock(piece);
     std::cout << turn->getName().toStdString() << " choosed first piece: " << piece->toString().toStdString() << std::endl;
 
     try {
-        //while (!board->checkVictory() && piece != NULL) {
-        while (piece != NULL) {
+        while (!board->checkVictory() && piece != NULL) {
             turn = getOpponent(turn);
             std::cout << "----------------------------------------------------------" << std::endl;
             std::cout << turn->getName().toStdString() << "'s turn, play with piece: " << piece->toString().toStdString() << std::endl;

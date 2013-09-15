@@ -43,8 +43,7 @@ QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
 int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
                              unsigned D, int alpha, int beta, bool maximize)
 {
-    //if((D > maxDepth) || (board->getStock().isEmpty()) || board->checkVictory()) {
-    if((D > maxDepth) || (board->getStock().isEmpty())) {
+    if((D > maxDepth) || (board->getStock().isEmpty()) || board->checkVictory()) {
         int boardScore = evalGameState(board, piece);
         return maximize ? -boardScore : boardScore;
     }
@@ -65,6 +64,8 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
             if(maximize) {
                 alphaNew = alphabeta(possibleBoard, possiblePiece, D + 1, alpha, beta, !maximize);
 
+
+
                 if(alphaNew > alpha) {
                     alpha = alphaNew;
 
@@ -74,20 +75,16 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
                     }
                 }
 
-                std::cout << "alphaNew = " << alphaNew << std::endl;
-                std::cout << "beta = " << beta << std::endl;
-                std::cout << "alphaNew >= beta : " << (alphaNew >= beta ? "true" : "false") << std::endl;
-
-                bool res = alphaNew >= beta;
-
-                // pruning                
-                if(res) {
+                // pruning
+                if(alphaNew >= beta) {
                     break;
                 }
             }
             // minimizing player
             else {
-                betaNew = alphabeta(possibleBoard, possiblePiece, D + 1, alpha, beta, maximize);
+                betaNew = alphabeta(possibleBoard, possiblePiece, D + 1, alpha, beta, !maximize);
+
+
 
                 if(betaNew < beta) {
                     beta = betaNew;
@@ -97,6 +94,7 @@ int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
                 if(betaNew <= alpha) {
                     break;
                 }
+
             }
 
             possibleBoard->addPieceToStock(possiblePiece);
@@ -113,10 +111,10 @@ int PlayerMiniMax::evalGameState(Board* board, Piece* piece)
     static int i = 0;
     static int retvals[12] = {8,3,-15,19,38,100,1,0,-90,-12,14,40};
 
-//    if (board->checkVictory()) {
-//        //std::cerr << "pes\n";
-//        return INIT_BETA;
-//    }
+    if (board->checkVictory()) {
+        //std::cerr << "pes\n";
+        return INIT_BETA;
+    }
 
-    return retvals[i++];
+    return 0;
 }
