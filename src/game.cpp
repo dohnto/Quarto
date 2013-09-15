@@ -109,7 +109,7 @@ Player *Game::createPlayer(struct player_t &player)
         retval = new PlayerMiniMax(QString(playerCounter+'0').append("-Minimax-").append(QString("%1").arg(player.minimax_level)), player.minimax_level, board, this);
         break;
     case REMOTE:
-        retval = new PlayerRemote(QString(playerCounter+'0').append("-Remote"), player.additional, board, this);  
+        retval = new PlayerRemote(QString(playerCounter+'0').append("-Remote"), player.host_port.host, player.host_port.port, board, this);
         break;
     case HUMAN:
         retval = new PlayerHuman(QString(playerCounter+'0').append("-Human"), board, this);

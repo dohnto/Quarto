@@ -7,6 +7,7 @@
 QT       += core
 
 QT       -= gui
+QT       += network widgets
 
 TARGET = Quarto
 CONFIG   += console

@@ -173,7 +173,7 @@ settings_t parse_cmd_params(int argc, char *argv[])
                 settings.players[player_index++].type = MINIMAX;
                 break;
             case OI_REMOTE:
-                settings.players[player_index].additional = QString(opt.arg);
+                //settings.players[player_index].host_port = QString(opt.arg);
                 settings.players[player_index++].type = REMOTE;
                 break;
             case OI_HUMAN:
