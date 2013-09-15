@@ -23,7 +23,7 @@ Piece* PlayerMiniMax::choosePiece()
  */
 QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
 {            
-    if(board->getStock().size() > (QUARTO_MOVES - NOVICE_MOVES_COUNT)) {
+    if(board->getStock().size() > (QUARTO_MOVES - NOVICE_MOVES_COUNT) && maxDepth) {
         return PlayerNovice::chooseField(piece);
     }
 
@@ -32,7 +32,9 @@ QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
         bestPos = board->getFreeFields().first();
         bestPiece = NULL;
     } else {
-        struct AlphaBetaResult result = alphabeta(board, piece, maxDepth, MINUS_INF - 1, PLUS_INF + 1, true);
+        unsigned depth = (maxDepth == 0) ? chooseDepth() : maxDepth;
+
+        struct AlphaBetaResult result = alphabeta(board, piece, depth, MINUS_INF - 1, PLUS_INF + 1, true);
         bestPos = result.field;
         bestPiece = result.piece;
         std::cout << "alfabeta = " << result.score << std::endl;
@@ -122,6 +124,36 @@ int PlayerMiniMax::lastPieceState(Board *board, Piece *piece)
     bool victory = board->checkVictory();
     board->deletePiece(freeFields.first());
     return (victory) ?  -PLUS_INF : 0; // loose vs draw
+}
+
+int PlayerMiniMax::chooseDepth()
+{
+    unsigned playedPieces = PIECE_COUNT - board->getStock().size();
+
+    unsigned minimaxLevel = 1;
+
+    switch (playedPieces) {
+    case 1:
+    case 2:
+    case 3:
+        minimaxLevel = 2;
+        break;
+    case 4:
+        minimaxLevel = 3;
+        break;
+    case 5:
+    case 6:
+        minimaxLevel = 4;
+        break;
+    case 7:
+        minimaxLevel = 5;
+        break;
+    case 8:
+    default:
+       minimaxLevel = 8;
+       break;
+    }
+    return minimaxLevel;
 }
 
 /**

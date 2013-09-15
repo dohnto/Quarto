@@ -43,6 +43,7 @@ private:
     int remainingPiecesScore(Board *board, Piece *piece);
 
     int lastPieceState(Board *board, Piece *piece);
+    int chooseDepth();
 };
 
 #endif // PLAYERMINIMAX_H
