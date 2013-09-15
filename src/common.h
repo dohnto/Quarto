@@ -19,10 +19,15 @@ enum player_e {
     HUMAN
 };
 
+struct conn {
+    quint16 port;
+    QString host;
+};
+
 struct player_t {
     player_e type;
     unsigned minimax_level;
-    QString additional;
+    conn host_port;
 };
 
 #define MAX(a,b) ((a) > (b)) ? a : b
