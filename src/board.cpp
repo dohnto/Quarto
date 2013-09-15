@@ -120,6 +120,7 @@ bool Board::checkVictory()
     QList<Piece *> fields;
 
     // check diagonals
+    fields.append(matrix[0][0]);
     for (unsigned i = 0; i < MATRIX_SIZE; ++i)
         fields.append(matrix[i][i]);
 
