@@ -14,8 +14,8 @@ protected:
 
 private:
     QTcpSocket *socket;
-    QString ip;
-    unsigned port;
+    QString host;
+    quint16 port;
 
 private slots:
     void closeConnection();
