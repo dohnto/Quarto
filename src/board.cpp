@@ -184,4 +184,16 @@ bool Board::checkVictoryFields(const QList<Piece *> & fields)
     return properties || properties_invert;
 }
 
+bool Board::hasSameMatrix(Board *board)
+{
+    if (board == NULL)
+        return false;
+
+    for (unsigned i = 0; i < MATRIX_SIZE; ++i)
+        for (unsigned j = 0; j < MATRIX_SIZE; ++j)
+            if (matrix[i][j] != board->getMatrix()[i][j])
+                return false;
+    return true;
+}
+
 

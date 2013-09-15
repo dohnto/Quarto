@@ -34,6 +34,8 @@ public:
     void deletePieceFromStock(Piece *piece) { stock.removeAll(piece); }
     void addPieceToStock(Piece *piece) { stock.append(piece); }
     void deletePiece(QPair<unsigned, unsigned> field) { matrix[field.first][field.second] = NULL; }
+
+    bool hasSameMatrix(Board *board);
 private:
     QList<Piece *> stock;
     Piece ***matrix;

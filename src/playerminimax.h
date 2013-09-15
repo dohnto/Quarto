@@ -29,9 +29,9 @@ private:
     Piece *bestPiece;
 
     QPair<unsigned, unsigned> chooseField(Piece *piece);    
-    int alphabeta(Board* board, Piece* piece, unsigned D, int alpha, int beta, bool maximize);
+//    int alphabeta(Board* board, Piece* piece, unsigned D, int alpha, int beta, bool maximize);
 
-    AlphaBetaResult alphabetaX(Board *board,
+    AlphaBetaResult alphabeta(Board *board,
                                                                      Piece *,
                                                                      unsigned depth,
                                                                      int alpha, int beta,
@@ -41,6 +41,8 @@ private:
 
     int tripletScore();
     int remainingPiecesScore(Board *board, Piece *piece);
+
+    int lastPieceState(Board *board, Piece *piece);
 };
 
 #endif // PLAYERMINIMAX_H

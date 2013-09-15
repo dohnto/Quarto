@@ -32,23 +32,32 @@ QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
         bestPos = board->getFreeFields().first();
         bestPiece = NULL;
     } else {
-        struct AlphaBetaResult result = alphabetaX(board, piece, maxDepth, MINUS_INF, PLUS_INF, true);
+        struct AlphaBetaResult result = alphabeta(board, piece, maxDepth, MINUS_INF - 1, PLUS_INF + 1, true);
         bestPos = result.field;
         bestPiece = result.piece;
         std::cout << "alfabeta = " << result.score << std::endl;
-        //std::cerr << "Alfabeta = " << alphabeta(board, piece, 1, INIT_ALPHA, INIT_BETA, true) << std::endl;
     }
 
     return bestPos;
 }
 
-struct AlphaBetaResult PlayerMiniMax::alphabetaX(Board *board, Piece *piece, unsigned depth,
+struct AlphaBetaResult PlayerMiniMax::alphabeta(Board *board, Piece *piece, unsigned depth,
                                                                  int alpha, int beta,
                                                                  bool maximize)
 {
     struct AlphaBetaResult bestMove;
 
-    if (depth == 0 || board->getStock().isEmpty() || board->checkVictory()) {
+    if (board->checkVictory()) { // check victory
+        bestMove.score = maximize ? MINUS_INF : PLUS_INF;
+        return bestMove;
+    }
+
+    if (board->getStock().isEmpty()) { // check last piece
+        bestMove.score = (maximize ? -1 : 1) * lastPieceState(board, piece);
+        return bestMove;
+    }
+
+    if (depth == 0) {
         bestMove.score = (maximize ? -1 : 1) * evalGameState(board, piece);
         return bestMove;
     }
@@ -66,7 +75,7 @@ struct AlphaBetaResult PlayerMiniMax::alphabetaX(Board *board, Piece *piece, uns
             possibleBoard->deletePieceFromStock(possiblePiece);
 
             if (maximize) {
-                struct AlphaBetaResult result = alphabetaX(possibleBoard, possiblePiece, depth - 1, alpha, beta, false);
+                struct AlphaBetaResult result = alphabeta(possibleBoard, possiblePiece, depth - 1, alpha, beta, false);
                 if (result.score > alpha) {
                     alpha = result.score;
                     bestMove.field = possibleField;
@@ -77,7 +86,7 @@ struct AlphaBetaResult PlayerMiniMax::alphabetaX(Board *board, Piece *piece, uns
                     break; // todo
                 }
             } else { // minimize
-                struct AlphaBetaResult result = alphabetaX(possibleBoard, possiblePiece, depth - 1, alpha, beta, true);
+                struct AlphaBetaResult result = alphabeta(possibleBoard, possiblePiece, depth - 1, alpha, beta, true);
 
                 if (result.score < beta) {
                     beta = result.score;
@@ -105,109 +114,37 @@ struct AlphaBetaResult PlayerMiniMax::alphabetaX(Board *board, Piece *piece, uns
     return bestMove;
 }
 
-/**
- * Tree generation with alpha beta pruning
- */
-/*
-int PlayerMiniMax::alphabeta(Board* board, Piece* piece,
-                             unsigned D, int alpha, int beta, bool maximize)
+int PlayerMiniMax::lastPieceState(Board *board, Piece *piece)
 {
-    if((D > maxDepth) || (board->getStock().isEmpty()) || board->checkVictory()) {
-        int boardScore = evalGameState(board, piece);
-        return maximize ? -boardScore : boardScore;
-    }
+    QList<QPair<unsigned, unsigned> > freeFields = board->getFreeFields();
+    assert(freeFields.size() == 1);
+    board->putPiece(freeFields.first(), piece);
+    bool victory = board->checkVictory();
+    board->deletePiece(freeFields.first());
+    return (victory) ?  -PLUS_INF : 0; // loose vs draw
+}
 
-    QPair<unsigned, unsigned> possibleField;
-    Board *possibleBoard = NULL;
-    Piece *possiblePiece = NULL;
-    int alphaNew, betaNew;
-
-    foreach(possibleField, board->getFreeFields()) {
-        possibleBoard = new Board(*board);
-        possibleBoard->putPiece(possibleField, piece);
-
-        foreach(possiblePiece, possibleBoard->getStock()) {
-            possibleBoard->deletePieceFromStock(possiblePiece);
-
-            // maximizing player
-            if(maximize) {
-                alphaNew = alphabeta(possibleBoard, possiblePiece, D + 1, alpha, beta, !maximize);
-
-
-
-                if(alphaNew > alpha) {
-                    alpha = alphaNew;
-
-                    if(D == 1) {                        
-                        bestPiece = possiblePiece;
-                        bestPos   = possibleField;
-                    }
-                }
-
-                // pruning
-                if(alphaNew >= beta) {
-                    break;
-                }
-            }
-            // minimizing player
-            else {
-                betaNew = alphabeta(possibleBoard, possiblePiece, D + 1, alpha, beta, !maximize);
-
-
-
-                if (betaNew < beta) {
-                    beta = betaNew;
-                }
-
-                // pruning
-                if (betaNew <= alpha) {
-                    break;
-                }
-
-            }
-
-            possibleBoard->addPieceToStock(possiblePiece);
-        }
-
-        delete possibleBoard;
-    }
-
-    return maximize ? alpha : beta;
-}*/
-
+/**
+ * BE SURE THAT YOU CALLED CHECKVICTORY BEFORE!!!
+ *
+ * @brief PlayerMiniMax::evalGameState
+ * @param board
+ * @param piece
+ * @return
+ */
 int PlayerMiniMax::evalGameState(Board* board, Piece* piece)
 {
-    if (board->checkVictory()) { // victory
-        return INIT_BETA;
-    }
-
-    if (board->getStock().size() == 0) {
-        QList<QPair<unsigned, unsigned> > freeFields = board->getFreeFields();
-        assert(freeFields.size() == 1);
-        board->putPiece(freeFields.first(), piece);
-        bool victory = board->checkVictory();
-        board->deletePiece(freeFields.first());
-        if (victory)
-            return -INIT_BETA; // victory of enemy
-        else
-            return 0; // draw
-
-    }
+//    if (board->checkVictory()) { // victory
+//        return PLUS_INF;
+//    }
 
     int score = 0;
-
-//    std::cout << "#########################################################\n";
-//    board->printMatrix();
-//    board->printStock();
-//    std::cout << "piece: " << piece->toString().toStdString() << std::endl;
 
     // remaining pieces
     score += remainingPiecesScore(board, piece);
 
-    score += tripletScore();
+    //score += tripletScore();
 
-//    std::cout << "score = " << score << std::endl;
-//    std::cout << "#########################################################\n";
     return score;
 }
 
@@ -218,34 +155,36 @@ int PlayerMiniMax::tripletScore()
 
 int PlayerMiniMax::remainingPiecesScore(Board *board, Piece *piece)
 {
-    Board *possibleBoard = new Board(*board);
+    static Board *possibleBoard = NULL;
+    static unsigned remaining = 0;
 
-    possibleBoard->addPieceToStock(piece);
-    Piece *chosenPiece;
+    if (!board->hasSameMatrix(possibleBoard)) {
+        if (possibleBoard != NULL)
+            delete possibleBoard;
+        possibleBoard = new Board(*board);
 
-    unsigned remaining = possibleBoard->getStock().size();
+        possibleBoard->addPieceToStock(piece);
+        Piece *chosenPiece;
 
-    foreach (chosenPiece, possibleBoard->getStock()) {
-        QPair<unsigned, unsigned> possibleField;
+        remaining = possibleBoard->getStock().size();
 
-        foreach (possibleField, possibleBoard->getFreeFields()) {
-            possibleBoard->putPiece(possibleField, chosenPiece);
+        foreach (chosenPiece, possibleBoard->getStock()) {
+            QPair<unsigned, unsigned> possibleField;
 
-            bool victory = possibleBoard->checkVictory();
+            foreach (possibleField, possibleBoard->getFreeFields()) {
+                possibleBoard->putPiece(possibleField, chosenPiece);
 
-            possibleBoard->deletePiece(possibleField);
+                bool victory = possibleBoard->checkVictory();
 
-            if (victory) {
-//              std::cout << "nemuzu hrat s " << chosenPiece->toString().toStdString() << std::endl;
-                remaining--;
-                break;
+                possibleBoard->deletePiece(possibleField);
+
+                if (victory) {
+                    remaining--;
+                    break;
+                }
             }
         }
     }
 
-    delete possibleBoard;
-
-    // odd : even
-//    std::cout << "remaining = " << remaining << std::endl;
-    return (remaining % 2) ? (INIT_BETA - remaining) : (INIT_ALPHA + remaining);
+    return (remaining % 2) ? (PLUS_INF - remaining) : (MINUS_INF + remaining);
 }

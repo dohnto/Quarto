@@ -11,7 +11,8 @@ QT       -= gui
 TARGET = Quarto
 CONFIG   += console
 CONFIG   -= app_bundle
-
+QMAKE_CXXFLAGS_DEBUG += -pg
+QMAKE_LFLAGS_DEBUG += -pg
 TEMPLATE = app
 
 
