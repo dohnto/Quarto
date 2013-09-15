@@ -1,5 +1,6 @@
 #include "playerremote.h"
 #include <QPair>
+#include <iostream>
 
 PlayerRemote::PlayerRemote(QString name, QString host, quint16 port, Board *board, QObject *parent) :
     Player(name, board, parent) // TODO , host(host), port(port)
@@ -8,7 +9,7 @@ PlayerRemote::PlayerRemote(QString name, QString host, quint16 port, Board *boar
 
     // TODO
     host = "localhost";
-    port = 5555;
+    port = 4545;
 
     connect(socket, SIGNAL(connected()), SLOT(socketConnected()));
     connect(socket, SIGNAL(connectionClosed()), SLOT(socketConnectionClosed()));
@@ -57,14 +58,20 @@ void PlayerRemote::sendToServer()
 void PlayerRemote::socketReadyRead()
 {
     // read from the server
-//    while ( socket->canReadLine() ) {
-//        infoText->append( socket->readLine() );
-//    }
+    QByteArray msg;
+    msg = socket->readAll();
+
+    // display message
+    char *data = msg.data();
+    while(*data) {
+        std::cout << *data << std::endl;
+        ++data;
+    }
 }
 
 void PlayerRemote::socketConnected()
 {
-//    infoText->append( tr("Connected to server\n") );
+    qDebug() << "Connected to server.\n";
 }
 
 void PlayerRemote::socketConnectionClosed()
@@ -79,5 +86,5 @@ void PlayerRemote::socketClosed()
 
 void PlayerRemote::socketError( int e )
 {
-    throw "ERROR: could not connect to server.";
+    throw "ERROR: some error happend";
 }

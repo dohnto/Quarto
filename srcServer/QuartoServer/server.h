@@ -10,15 +10,22 @@ class Server : public QObject
     Q_OBJECT
 
 public:
-    Server(QObject* parent = 0);
+    Server(quint64 _port, QObject* parent = 0);
 
 private:
     QTcpServer *server;
     QTcpSocket *client1;
     QTcpSocket *client2;
+    quint64 port;
+
+signals:
+    void readyWrite();
 
 private slots:
     void acceptConnection();
+    void readMsgFromClient();
+    void sendMsgToClient();
+    void sendInitMsg();
 };
 
 #endif // SERVER_H
