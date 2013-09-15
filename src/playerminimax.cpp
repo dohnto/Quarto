@@ -31,10 +31,77 @@ QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
         bestPos = board->getFreeFields().first();
         bestPiece = NULL;
     } else {
-        std::cerr << "Alfabeta = " << alphabeta(board, piece, 1, INIT_ALPHA, INIT_BETA, true) << std::endl;
+        struct AlphaBetaResult result = alphabetaX(board, piece, maxDepth, INIT_ALPHA, INIT_BETA, true);
+        bestPos = result.field;
+        bestPiece = result.piece;
+
+        //std::cerr << "Alfabeta = " << alphabeta(board, piece, 1, INIT_ALPHA, INIT_BETA, true) << std::endl;
     }
 
     return bestPos;
+}
+
+struct AlphaBetaResult PlayerMiniMax::alphabetaX(Board *board, Piece *piece, unsigned depth,
+                                                                 int alpha, int beta,
+                                                                 bool maximize)
+{
+    struct AlphaBetaResult bestMove;
+
+    if (depth == 0 || board->getStock().isEmpty() || board->checkVictory()) {
+        bestMove.score = (maximize ? -1 : 1) * evalGameState(board, piece);
+        return bestMove;
+    }
+
+
+    QPair<unsigned, unsigned> possibleField;
+    Board *possibleBoard = NULL;
+    Piece *possiblePiece = NULL;
+
+    foreach (possibleField, board->getFreeFields()) {
+        possibleBoard = new Board(*board);
+        possibleBoard->putPiece(possibleField, piece);
+
+        foreach(possiblePiece, possibleBoard->getStock()) {
+            possibleBoard->deletePieceFromStock(possiblePiece);
+
+            if (maximize) {
+                struct AlphaBetaResult result = alphabetaX(possibleBoard, possiblePiece, depth - 1, alpha, beta, false);
+                if (result.score > alpha) {
+                    alpha = result.score;
+                    bestMove.field = possibleField;
+                    bestMove.piece = possiblePiece;
+                }
+
+                if (alpha >= beta) {
+                    break; // todo
+                }
+            } else { // minimize
+                struct AlphaBetaResult result = alphabetaX(possibleBoard, possiblePiece, depth - 1, alpha, beta, true);
+
+                if (result.score < beta) {
+                    beta = result.score;
+                    bestMove.field = possibleField;
+                    bestMove.piece = possiblePiece;
+                }
+
+                if (alpha >= beta) {
+                    break;
+                }
+            }
+
+            possibleBoard->addPieceToStock(possiblePiece);
+        }
+
+        if (alpha >= beta) {
+            break;
+        }
+
+        delete possibleBoard;
+    }
+
+
+    bestMove.score = maximize ? alpha : beta;
+    return bestMove;
 }
 
 /**

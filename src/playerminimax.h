@@ -5,6 +5,13 @@
 #include "piece.h"
 #include "QPair"
 
+struct AlphaBetaResult
+{
+    int score;
+    QPair <unsigned, unsigned> field;
+    Piece *piece;
+};
+
 
 class PlayerMiniMax : public PlayerNovice
 {
@@ -23,6 +30,12 @@ private:
 
     QPair<unsigned, unsigned> chooseField(Piece *piece);    
     int alphabeta(Board* board, Piece* piece, unsigned D, int alpha, int beta, bool maximize);
+
+    AlphaBetaResult alphabetaX(Board *board,
+                                                                     Piece *,
+                                                                     unsigned depth,
+                                                                     int alpha, int beta,
+                                                                     bool maximize);
     int evalGameState(Board* board, Piece* piece);
 };
 
