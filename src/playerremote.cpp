@@ -34,6 +34,11 @@ QPair<unsigned, unsigned> PlayerRemote::chooseField(Piece *piece)
 {
 
     // TODO
+
+    //socket->waitForReadyRead(-1);
+
+    QByteArray data = socket->read(40);
+    std::cout << "data = " << data.data() << std::endl;
     QPair<unsigned, unsigned> pair;
     return pair;
 }
@@ -66,11 +71,7 @@ void PlayerRemote::socketReadyRead()
     msg = socket->readAll();
 
     // display message
-    char *data = msg.data();
-    while(*data) {
-        std::cout << *data << std::endl;
-        ++data;
-    }
+    std::cout << msg.data() << std::endl;
 }
 
 void PlayerRemote::socketConnected()

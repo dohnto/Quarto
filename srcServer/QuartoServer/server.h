@@ -21,7 +21,7 @@ private:
 signals:
     void readyWrite();
 
-private slots:
+public slots:
     void acceptConnection();
     void readMsgFromClient();
     void sendMsgToClient();

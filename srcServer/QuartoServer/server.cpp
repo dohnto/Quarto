@@ -5,7 +5,7 @@ Server::Server(quint64 _port, QObject *parent) : QObject(parent), port(_port)
 {
     server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(acceptConnection()));   
-    connect(server, SIGNAL(readyWrite), this, SLOT(sendInitMsg));
+    connect(this, SIGNAL(readyWrite), this, SLOT(sendInitMsg));
     server->setMaxPendingConnections(2);
 
     qDebug() << "port = " << port;
@@ -24,10 +24,10 @@ void Server::acceptConnection()
 
     qDebug() << "Client connected to server\n";
 
-    connect(client1, SIGNAL(readyRead()), SLOT(readMsgFromCleint()));
+    connect(client1, SIGNAL(readyRead()), SLOT(readMsgFromClient()));
 //    connect(socket, SIGNAL(disconnected()), SLOT(sdisconnected()));
 
-    emit(readyWrite());
+    sendInitMsg();
 }
 
 void Server::readMsgFromClient()
@@ -58,5 +58,6 @@ void Server::sendMsgToClient()
 /** Initial message for client */
 void Server::sendInitMsg()
 {
+    qDebug() << "posilam hello";
     client1->write("hello client1");
 }

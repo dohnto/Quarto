@@ -15,6 +15,7 @@
 \renewcommand{\footrulewidth}{0pt} % Remove footer underlines
 \usepackage{graphicx}
 \usepackage{indentfirst}
+\usepackage[table]{xcolor}
 \usepackage{booktabs}
 \newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
 \setlength\parindent{20pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
@@ -51,10 +52,6 @@
 
 \section{Introduction}
 \section{State evaluation function}
-\begin{itemize}
-\item check occurrence two triplets of the opposing feature
-\end{itemize}
-
 \section{Results}
 \subsection{Random versus Novice}
 
@@ -71,6 +68,11 @@ Novice      & 97        & 3      & 0 \\
 \label{tab:precedence}
 \end{table*}
 
+
+\begin{figure}[htp] \centering{
+\includegraphics[scale=0.82]{img/random-novice.pdf}}
+\caption{Random against Novice from Novice's point of view: \textcolor{blue!100!yellow!100!red!80}{$\bullet$} Victories, \textcolor{red!100}{$\bullet$} Looses.}
+\end{figure}  
 
 \subsection{Novice versus Minimax-3}
 \subsection{Minimax-3 versus Minimax-4}
