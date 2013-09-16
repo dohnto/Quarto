@@ -22,6 +22,8 @@ void Server::acceptConnection()
     if(!client1)
         throw "ERROR: Could not create socket for connecting client.";
 
+    qDebug() << "Client connected to server\n";
+
     connect(client1, SIGNAL(readyRead()), SLOT(readMsgFromCleint()));
 //    connect(socket, SIGNAL(disconnected()), SLOT(sdisconnected()));
 

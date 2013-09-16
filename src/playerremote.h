@@ -2,11 +2,14 @@
 #define PLAYERREMOTE_H
 #include "player.h"
 #include <QTcpSocket>
+#include <QObject>
 
 class PlayerRemote : public Player
 {
+    Q_OBJECT
+
 public:
-    PlayerRemote(QString name, QString host, quint16 port, Board *board, QObject *parent);
+    PlayerRemote(QString name, QString _host, quint16 _port, Board *board, QObject *parent);
     Piece *choosePiece();
 
 protected:
@@ -17,14 +20,14 @@ private:
     QString host;
     quint16 port;
 
-private slots:
+public slots:
     void closeConnection();
     void sendToServer();
     void socketReadyRead();
     void socketConnected();
-    void socketConnectionClosed();
+    //void socketConnectionClosed();
     void socketClosed();
-    void socketError(int e);
+    void socketError();
 };
 
 #endif // PLAYERREMOTE_H

@@ -2,22 +2,26 @@
 #include <QPair>
 #include <iostream>
 
-PlayerRemote::PlayerRemote(QString name, QString host, quint16 port, Board *board, QObject *parent) :
-    Player(name, board, parent) // TODO , host(host), port(port)
+PlayerRemote::PlayerRemote(QString name, QString _host, quint16 _port, Board *board, QObject *parent) :
+    Player(name, board, parent), host(_host), port(_port)
 {
     socket = new QTcpSocket(this);
 
     // TODO
-    host = "localhost";
-    port = 4545;
+//    host = "localhost";
+//    port = 4545;
 
-    connect(socket, SIGNAL(connected()), SLOT(socketConnected()));
-    connect(socket, SIGNAL(connectionClosed()), SLOT(socketConnectionClosed()));
-    connect(socket, SIGNAL(readyRead()), SLOT(socketReadyRead()));
-    connect(socket, SIGNAL(error(int)), SLOT(socketError(int)));
+    connect(socket, SIGNAL(connected()), this, SLOT(socketConnected()));
+    //connect(socket, SIGNAL(connectionClosed()), this, SLOT(socketConnectionClosed()));
+    connect(socket, SIGNAL(readyRead()), this, SLOT(socketReadyRead()));
+    //connect(socket, SIGNAL(error()), this, SLOT(socketError()));
 
     // connect to server
+    qDebug() << "Connecting to server " << host << "on port " << port << "\n";
+
     socket->connectToHost(host, port);
+    int er = socket->error();
+    qDebug() << "socket error: " << er << "\n";
 }
 
 Piece *PlayerRemote::choosePiece()
@@ -74,17 +78,17 @@ void PlayerRemote::socketConnected()
     qDebug() << "Connected to server.\n";
 }
 
-void PlayerRemote::socketConnectionClosed()
-{
-//    infoText->append( tr("Connection closed by the server\n") );
-}
+//void PlayerRemote::socketConnectionClosed()
+//{
+////    infoText->append( tr("Connection closed by the server\n") );
+//}
 
 void PlayerRemote::socketClosed()
 {
 //    infoText->append( tr("Connection closed\n") );
 }
 
-void PlayerRemote::socketError( int e )
+void PlayerRemote::socketError()
 {
     throw "ERROR: some error happend";
 }
