@@ -32,6 +32,8 @@ private:
     Player *getOpponent(Player *);
     Player *createPlayer(struct player_t & player);
     bool checkVictory();
+
+    bool isPlayerRemote(Player *p);
 signals:
     /// Finishes the application.
     void finished();

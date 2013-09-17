@@ -40,7 +40,7 @@ public:
 
 private:
     QList<Piece *> stock;
-    Piece ***matrix;    
+    Piece ***matrix;
 
     /** Creates textual representation of the piece */
     QString piece2str(Piece *piece);

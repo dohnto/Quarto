@@ -63,16 +63,23 @@ void Game::run()
     }
 
 
+
     if (board->checkVictory()) { // someone has won
+        if (isPlayerRemote(getOpponent(turn))) {
+            PlayerRemote *p =  dynamic_cast<PlayerRemote *>(getOpponent(turn));
+            p->sendPosition(board->lastMove);
+            p->sendPiece(piece);
+        }
         std::cout << turn->getName().toUtf8().constData() << " has won!" << std::endl;
     } else { // draw
         if (board->getStock().size() != 0) {
-            qDebug() << "Tohle se nesmi nikdy stat!";
+            qDebug() << "This can never happen!";
             exit(1);
         }
         std::cout << "It is a draw!" << std::endl;
     }
 
+    getchar();
     quit();
 }
 /**
@@ -129,6 +136,14 @@ Player *Game::createPlayer(struct player_t &player)
     }
 
     return retval;
+}
+
+bool Game::isPlayerRemote(Player *p)
+{
+    assert(p != NULL);
+
+    PlayerRemote *remote = dynamic_cast<PlayerRemote *>(p);
+    return remote != NULL;
 }
 
 /**

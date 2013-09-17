@@ -14,6 +14,8 @@ public:
 
     bool hasFirstTurn() { return starts; }
 
+    void sendPosition(QPair<unsigned, unsigned> pos);
+    void sendPiece(Piece *p);
 protected:
     QPair<unsigned, unsigned> chooseField(Piece *piece);
 
@@ -26,7 +28,7 @@ private:
 
     void welcome(QString name);
 
-    QString getLineFromSocketWithMin(int min);
+    QString getLineFromSocket();
 public slots:
     void closeConnection();
     void sendToServer();
