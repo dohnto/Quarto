@@ -34,9 +34,6 @@ QString PlayerRemote::getLineFromSocket()
         socket->readLine(buffer, 499);
         data.append(buffer);
     }
-
-    qDebug() << data;
-
     return data;
 }
 
@@ -50,6 +47,7 @@ Piece *PlayerRemote::choosePiece()
 {
     QString data;
     // SERVER: -1100 please send your move
+    qDebug() << "LASTLINE:" << lastLine << lastLine.size();
     if (lastLine.size())
         data = lastLine.remove(0, lastLine.indexOf('-')+1);// '-' //getLineFromSocketWithMin(4);
     else
@@ -67,7 +65,7 @@ Piece *PlayerRemote::choosePiece()
         if(candidate->toBinaryString() == p.toBinaryString())
             break;
 
-    assert(candidate);
+    //assert(candidate);
     return candidate;
 }
 

@@ -81,7 +81,7 @@ void Game::run()
         if (board->checkVictory()) { // someone has won
             unsigned index = turn == player1 ? 0 : 2;
             resultsTable[index]++;
-            std::cout << turn->getName().toUtf8().constData() << " has won!" << std::endl;
+            std::cout << turn->getName().toUtf8().constData() << " has won!xx" << std::endl;
         } else { // draw
             if (board->getStock().size() != 0) {
                 qDebug() << "This can never happen!";
@@ -186,8 +186,8 @@ void Game::printStatistics(unsigned *resultsTable)
     std::cout << "---------------------------------------\n";
     std::cout << repetitions << " games played\n";
     std::cout << player1->getName().toStdString() << " had won " << resultsTable[0] << " times\n";
-    std::cout << player1->getName().toStdString() << " had tied " << resultsTable[1] << " times\n";
-    std::cout << player1->getName().toStdString() << " had lost " << resultsTable[2] << " times\n";
+    std::cout << player2->getName().toStdString() << " had won " << resultsTable[2] << " times\n";
+    std::cout << "Draws: " << resultsTable[1] << " times\n";
     std::cout << "---------------------------------------\n";
 }
 

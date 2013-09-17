@@ -8,8 +8,7 @@ PlayerMiniMax::PlayerMiniMax(QString name, unsigned maxDepth,
                              Board *board, QObject *parent) :
     PlayerNovice(name, board, parent), maxDepth(maxDepth)
 {
-    bestPiece = NULL;
-    bestPos.first = bestPos.second = 0;
+    reset();
 }
 
 /**
@@ -242,4 +241,10 @@ int PlayerMiniMax::remainingPiecesScore(Board *board, Piece *piece)
     }
 
     return (remaining % 2) ? (PLUS_INF - remaining) : (MINUS_INF + remaining);
+}
+
+void  PlayerMiniMax::reset()
+{
+    bestPiece = NULL;
+    bestPos.first = bestPos.second = 0;
 }
