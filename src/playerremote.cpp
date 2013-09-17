@@ -27,14 +27,28 @@ PlayerRemote::PlayerRemote(QString name, QString _host, quint16 _port, Board *bo
 }
 
 QString PlayerRemote::getLineFromSocketWithMin(int min)
-{
-    QString data;
-    while (data.size() < min) {
+{  
+    QString data = "";
+
+    qint64 ret = -1;
+    while(ret <= 0) {
+        char buf[500] = {'\0'};
         socket->waitForReadyRead(-1);
-        char buffer[500] = {'\0'};
-        socket->readLine(buffer, 499);
-        data.append(buffer);
+        ret = socket->readLine(buf, 499);
+        data.append(buf);
     }
+
+
+    qDebug() << "read from socket: " << data;
+    qDebug() << "newline " << (data.indexOf('\n') != -1 ? "FOUND" : "NOT FOUND");
+
+
+//    while (data.size() < min) {
+//        socket->waitForReadyRead(-1);
+//        char buffer[500] = {'\0'};
+//        socket->readLine(buffer, 499);
+//        data.append(buffer);
+//    }
 
     return data;
 }
@@ -51,7 +65,7 @@ Piece *PlayerRemote::choosePiece()
 //    }
     std::cout << "SERVER: " << data.toStdString() << std::endl;
 
-    assert(data.size() > 4);
+    //assert(data.size() > 4);
 
     QString pieceStr(data.left(5).right(4));
     Piece p(pieceStr);
@@ -99,9 +113,6 @@ QPair<unsigned, unsigned> PlayerRemote::chooseField(Piece *piece)
     socket->write(piece->toBinaryString().append('\n').toAscii());
     std::cout << "CLIENT:" << piece->toBinaryString().toStdString() << std::endl;
 
-<<<<<<< HEAD
-    socket->waitForReadyRead(-1);
-=======
     // SERVER: 2, 2
     //socket->waitForReadyRead(-1);
     //data = socket->readLine();
@@ -116,7 +127,6 @@ QPair<unsigned, unsigned> PlayerRemote::chooseField(Piece *piece)
 
     qDebug() << "VALGRIND: " << pair.first << pair.second << piece;
 //    std::cout << "x,y = " <<  pair.first << "," << pair.second << std::endl;
->>>>>>> f8b187831663af6c2f4c462d24e83cd5e1ab1a7a
 
     return pair;
 }
