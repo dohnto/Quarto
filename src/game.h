@@ -15,16 +15,17 @@ class Game : public QObject
 public:
 
     /// Constructor.
-    explicit Game(player_t & p1, player_t & p2, QObject *parent = 0);
+    explicit Game(unsigned repetitions, player_t & p1, player_t & p2, QObject *parent = 0);
 
     /// Quitting the application.
     void quit();
 
 private:
+    unsigned repetitions;
     QCoreApplication *app;  /**< ??? TODO */
     unsigned playerCounter;
     Player *turn;           /**< whose turn is it */
-
+    Player *starts;
     Player  *player1;
     Player  *player2;
     Board   *board;
@@ -32,6 +33,10 @@ private:
     Player *getOpponent(Player *);
     Player *createPlayer(struct player_t & player);
     bool checkVictory();
+
+    bool isPlayerRemote(Player *p);
+
+    void printStatistics(unsigned *resultsTable);
 signals:
     /// Finishes the application.
     void finished();

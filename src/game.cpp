@@ -14,8 +14,9 @@
  *
  * @param parent a pointer to the parent
  */
-Game::Game(player_t & p1, player_t & p2, QObject *parent) :
+Game::Game(unsigned repetitions, player_t & p1, player_t & p2, QObject *parent) :
     QObject(parent),
+    repetitions(repetitions),
     playerCounter(0),
     turn(NULL)
 {
@@ -32,9 +33,9 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) :
     PlayerRemote *remote2 = dynamic_cast<PlayerRemote *>(player2);
 
     if ((remote1 && remote1->hasFirstTurn()) || (remote2 && !remote2->hasFirstTurn()))
-        turn = player1;
-
-    turn = (turn) ? turn : player2;
+        starts = player1;
+    else
+        starts = player2;
 }
 
 /**
@@ -43,36 +44,77 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) :
  */
 void Game::run()
 {
-    Piece* piece = turn->choosePiece();
-    board->deletePieceFromStock(piece);
-    std::cout << turn->getName().toStdString() << " choosed first piece: " << piece->toString().toStdString() << std::endl;
+    // wins, draws, looses for player1
+    unsigned resultsTable[3] = {0, 0, 0};
 
-    try {
-        while (!board->checkVictory() && piece != NULL) {
-            turn = getOpponent(turn);
-            std::cout << "----------------------------------------------------------" << std::endl;
-            std::cout << turn->getName().toStdString() << "'s turn, play with piece: " << piece->toString().toStdString() << std::endl;
-            piece = turn->move(piece);
-            std::cout << turn->getName().toStdString() << " played the piece and choosed a piece for opponent." << std::endl;
-            std::cout << "You can see the position below" << std::endl;
-            board->printMatrix();
-            board->printStock();
+    for (unsigned i = 0; i < repetitions; ++i) {
+        turn = starts;
+        Piece* piece = turn->choosePiece();
+        board->deletePieceFromStock(piece);
+        std::cout << turn->getName().toStdString() << " choosed first piece: " << piece->toString().toStdString() << std::endl;
+
+        try {
+            while (!board->checkVictory() && piece != NULL) {
+                turn = getOpponent(turn);
+                std::cout << "----------------------------------------------------------" << std::endl;
+                std::cout << turn->getName().toStdString() << "'s turn, play with piece: " << piece->toString().toStdString() << std::endl;
+                piece = turn->move(piece);
+                std::cout << turn->getName().toStdString() << " played the piece and choosed a piece for opponent." << std::endl;
+                std::cout << "You can see the position below" << std::endl;
+                board->printMatrix();
+                board->printStock();
+            }
+        } catch (const char * excpt) {
+            qDebug() << excpt;
         }
-    } catch (const char * excpt) {
-        qDebug() << excpt;
+
+        qDebug() << "checkpoint 1";
+
+        if (isPlayerRemote(getOpponent(turn))) {
+            PlayerRemote *p =  dynamic_cast<PlayerRemote *>(getOpponent(turn));
+            p->sendPosition(board->lastMove);
+        }
+
+
+        qDebug() << "checkpoint 2";
+
+        if (board->checkVictory()) { // someone has won
+            unsigned index = turn == player1 ? 0 : 2;
+            resultsTable[index]++;
+            std::cout << turn->getName().toUtf8().constData() << " has won!" << std::endl;
+        } else { // draw
+            if (board->getStock().size() != 0) {
+                qDebug() << "This can never happen!";
+                exit(1);
+            }
+            resultsTable[1]++;
+            std::cout << "It is a draw!" << std::endl;
+        }
+
+
+        qDebug() << "checkpoint 3";
+
+        qDebug() << "podminka = " << (isPlayerRemote(player1) || isPlayerRemote(player2));
+        if ((isPlayerRemote(player1)) || isPlayerRemote(player2)) { // remote game, check if repetition;
+            qDebug() << "VZDALENA";
+
+            Player *r = isPlayerRemote(player1) ? player1 : player2;
+            PlayerRemote *remote = dynamic_cast<PlayerRemote *>(r);
+            QString data = remote->getLineFromSocket();
+
+            qDebug() << "SERVERxx:" << data;
+            while (data != "Please reset yourself for the next game.\n") {
+                data = remote->getLineFromSocket();
+                qDebug() << "SERVERyy:" << data;
+            }
+        }
+
+        board->reset();
+        player1->reset();
+        player2->reset();
     }
 
-
-    if (board->checkVictory()) { // someone has won
-        std::cout << turn->getName().toUtf8().constData() << " has won!" << std::endl;
-    } else { // draw
-        if (board->getStock().size() != 0) {
-            qDebug() << "Tohle se nesmi nikdy stat!";
-            exit(1);
-        }
-        std::cout << "It is a draw!" << std::endl;
-    }
-
+    printStatistics(resultsTable);
     quit();
 }
 /**
@@ -129,6 +171,24 @@ Player *Game::createPlayer(struct player_t &player)
     }
 
     return retval;
+}
+
+bool Game::isPlayerRemote(Player *p)
+{
+    assert(p != NULL);
+
+    PlayerRemote *remote = dynamic_cast<PlayerRemote *>(p);
+    return remote != NULL;
+}
+
+void Game::printStatistics(unsigned *resultsTable)
+{
+    std::cout << "---------------------------------------\n";
+    std::cout << repetitions << " games played\n";
+    std::cout << player1->getName().toStdString() << " had won " << resultsTable[0] << " times\n";
+    std::cout << player1->getName().toStdString() << " had tied " << resultsTable[1] << " times\n";
+    std::cout << player1->getName().toStdString() << " had lost " << resultsTable[2] << " times\n";
+    std::cout << "---------------------------------------\n";
 }
 
 /**

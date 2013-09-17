@@ -18,6 +18,7 @@ enum status_t {
 struct settings_t {
     status_t status;
     player_t players[PLAYER_COUNT];
+    unsigned repetitions;
 };
 
 
@@ -29,7 +30,8 @@ enum optionIndex {
     OI_NOVICE,
     OI_MINIMAX,
     OI_REMOTE,
-    OI_HUMAN
+    OI_HUMAN,
+    OI_REPETITIONS
 };
 
 
@@ -44,7 +46,7 @@ const option::Descriptor usage[] = {
     {OI_UNKNOWN, 0, "",  "", option::Arg::None,     "USAGE: Quatro [OPTIONS] PLAYER PLAYER \n\n"
                                                  "Options:" },
     {OI_HELP,    0, "", "help", option::Arg::None, "  --help  \tPrint this text and exit." },
-    {OI_HEADLESS,0, "", "headless", option::Arg::None, "  --headless  \tStarts without GUI.\n\n"
+    {OI_REPETITIONS,0, "", "repetitions", Arg::Required, "  --repetitions  \tHow many games should be played.\n\n"
                                                  "Players:"},
     {OI_RANDOM,  0, "", "random", option::Arg::None, "  --random   \tRandom player." },
     {OI_NOVICE,  0, "", "novice", option::Arg::None, "  --novice   \tNovice player." },
@@ -81,7 +83,7 @@ int main(int argc, char *argv[])
     }
 
     // create the main class
-    Game game(settings.players[0], settings.players[1], &app);
+    Game game(settings.repetitions, settings.players[0], settings.players[1], &app);
 
     // connect up the signals
     QObject::connect(&game,   SIGNAL(finished()),
@@ -114,6 +116,7 @@ settings_t parse_cmd_params(int argc, char *argv[])
     settings_t settings;
 
     settings.status = E_OK;
+    settings.repetitions = 1;
 
     // skip program name argv[0] if present
     argc -= (argc > 0);
@@ -159,6 +162,9 @@ settings_t parse_cmd_params(int argc, char *argv[])
     for (int i = 0; i < parse.optionsCount(); ++i) {
         option::Option& opt = buffer[i];
         switch (opt.index()) {
+            case OI_REPETITIONS:
+                settings.repetitions = atoi(opt.arg);
+                break;
             case OI_HEADLESS:
                 settings.status = E_HEADLESS;
                 break;
