@@ -13,7 +13,7 @@ class Board : public QObject
     Q_OBJECT
 public:
     explicit Board(QObject *parent = 0);
-    Board(Board & other);
+    Board(Board & other, QObject *parent = 0);
 
     ~Board();  
     /** Prints current board state with coordinates */
@@ -36,9 +36,11 @@ public:
     void deletePiece(QPair<unsigned, unsigned> field) { matrix[field.first][field.second] = NULL; }
 
     bool hasSameMatrix(Board *board);
+    QPair<unsigned, unsigned> lastMove;
+
 private:
     QList<Piece *> stock;
-    Piece ***matrix;
+    Piece ***matrix;    
 
     /** Creates textual representation of the piece */
     QString piece2str(Piece *piece);

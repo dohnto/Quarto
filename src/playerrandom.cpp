@@ -43,7 +43,7 @@ Piece *PlayerRandom::choosePiece()
  * @brief PlayerRandom::chooseField randomly choose field
  * @return
  */
-QPair<unsigned, unsigned> PlayerRandom::chooseField(Piece *piece)
+QPair<unsigned, unsigned> PlayerRandom::chooseField(Piece *)
 {
     QList<QPair<unsigned, unsigned> > freeFields = board->getFreeFields();
     return freeFields[rand() % freeFields.size()];
