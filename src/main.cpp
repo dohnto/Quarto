@@ -21,7 +21,7 @@ struct settings_t {
     unsigned repetitions;
 };
 
-
+// possible command line options
 enum optionIndex {
     OI_UNKNOWN,
     OI_HELP,
@@ -34,7 +34,7 @@ enum optionIndex {
     OI_REPETITIONS
 };
 
-
+// option parser stuff
 struct Arg: public option::Arg {
     static option::ArgStatus Required(const option::Option& option, bool)
     {

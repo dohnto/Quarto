@@ -54,7 +54,7 @@ unsigned PlayerHuman::getCoordToPutPiece(bool row)
     QString input;
 
     do {
-        std::cout << "Choose " << ((row) ? "row" : "column") << " where to put piece: ";
+        std::cout << "Choose " << ((row) ? "row" : "column") << " where to put piece (" << ((row) ? "1-4" : "W-Z") << "): ";
         input = streamIn.readLine();
         if (input.isNull() || input.size() == 0)
             continue;

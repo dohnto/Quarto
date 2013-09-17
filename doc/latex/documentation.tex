@@ -55,27 +55,71 @@
 \section{Results}
 \subsection{Random versus Novice}
 
-\begin{table*}[h]\centering
-\ra{1.3}
-    \caption{Random against Novice player results. 100 Games.}.
-\vspace{2mm}
-\begin{tabular}{cccc}\toprule
-Player type & Victories & Looses & Draws \\ \midrule
-Random      & 3         & 97     & 0 \\
-Novice      & 97        & 3      & 0 \\
-\bottomrule
-\end{tabular}
-\label{tab:precedence}
-\end{table*}
+
+\begin{figure}[ht]
+    \begin{minipage}[c]{0.40\linewidth}
+        \centering
+        \ra{1.3}
+        \begin{tabular}{cll}
+            \toprule
+            \textcolor{red!100}{$\bullet$} & Random wins & 3       \\
+            \textcolor{blue!100!yellow!100!red!80}{$\bullet$} & Novice wins & 97      \\  
+            \bottomrule
+        \end{tabular}
+    \end{minipage}
+    \begin{minipage}[c]{0.60\linewidth}
+        \centering
+        \includegraphics[scale=0.35]{img/random-novice.pdf}
+    \end{minipage}
+    \caption{100 games of Random against Novice.}
+\end{figure}
 
 
-\begin{figure}[htp] \centering{
-\includegraphics[scale=0.82]{img/random-novice.pdf}}
-\caption{Random against Novice from Novice's point of view: \textcolor{blue!100!yellow!100!red!80}{$\bullet$} Victories, \textcolor{red!100}{$\bullet$} Looses.}
-\end{figure}  
 
 \subsection{Novice versus Minimax-3}
+
+
+\begin{figure}[ht]
+    \begin{minipage}[c]{0.40\linewidth}
+        \centering
+        \ra{1.3}
+        \begin{tabular}{cll}
+            \toprule
+            \textcolor{red!100}{$\bullet$} & Novice wins & 1       \\
+            \textcolor{blue!100!yellow!100!red!80}{$\bullet$} & Minimax-3 wins & 18      \\  
+            \textcolor{gray!100}{$\bullet$} & Draws & 1      \\  
+            \bottomrule
+        \end{tabular}
+    \end{minipage}
+    \begin{minipage}[c]{0.60\linewidth}
+        \centering
+        \includegraphics[scale=0.35]{img/novice-minimax3.pdf}
+    \end{minipage}
+    \caption{20 games of Novice against  Minimax-3.}
+\end{figure}
+
+
 \subsection{Minimax-3 versus Minimax-4}
+
+\begin{figure}[ht]
+    \begin{minipage}[c]{0.40\linewidth}
+        \centering
+        \ra{1.3}
+        \begin{tabular}{cll}
+            \toprule
+            \textcolor{red!100}{$\bullet$} & Minimax-3 wins & 2       \\
+            \textcolor{blue!100!yellow!100!red!80}{$\bullet$} & Minimax-4 wins & 9      \\  
+            \textcolor{gray!100}{$\bullet$} & Draws & 9      \\  
+            \bottomrule
+        \end{tabular}
+    \end{minipage}
+    \begin{minipage}[c]{0.60\linewidth}
+        \centering
+        \includegraphics[scale=0.35]{img/minimax3-minimax4.pdf}
+    \end{minipage}
+    \caption{20 games of Minimax-3 against Minimax-4.}
+\end{figure}
+
 \subsection{Minimax in tournament}
 \section{Participation in tournament}
 \section{Summary}

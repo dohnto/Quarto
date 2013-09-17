@@ -146,7 +146,11 @@ bool Board::checkVictory()
     return false;
 }
 
-
+/**
+ * @brief Board::putPiece put piece on given field
+ * @param index
+ * @param piece
+ */
 void Board::putPiece(const QPair<unsigned, unsigned> & index, Piece *piece)
 {
     if (index.first >= MATRIX_SIZE || index.second >= MATRIX_SIZE)
@@ -159,7 +163,11 @@ void Board::putPiece(const QPair<unsigned, unsigned> & index, Piece *piece)
     lastMove = index;
 }
 
-
+/**
+ * @brief Board::checkVictoryFields check if all given fields share a property
+ * @param fields
+ * @return
+ */
 bool Board::checkVictoryFields(const QList<Piece *> & fields)
 {
     unsigned properties = PIECE_BLUE | PIECE_HOLLOW | PIECE_SMALL | PIECE_SQUARE;
@@ -177,6 +185,11 @@ bool Board::checkVictoryFields(const QList<Piece *> & fields)
     return properties || properties_invert;
 }
 
+/**
+ * @brief Board::hasSameMatrix check if given board has same pieces in same matrix fieldss
+ * @param board
+ * @return
+ */
 bool Board::hasSameMatrix(Board *board)
 {
     if (board == NULL)
@@ -189,7 +202,9 @@ bool Board::hasSameMatrix(Board *board)
     return true;
 }
 
-
+/**
+ * @brief Board::reset resets everything so new game can start
+ */
 void Board::reset()
 {
     stock.clear();

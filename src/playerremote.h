@@ -33,7 +33,6 @@ private:
 
 public slots:
     void closeConnection();
-    void sendToServer();
     void socketReadyRead();
     void socketConnected();
     //void socketConnectionClosed();
