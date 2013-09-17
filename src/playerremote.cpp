@@ -27,12 +27,23 @@ QString PlayerRemote::getLineFromSocket()
 {
     QString data;
     while (data.indexOf('\n') == -1) {
-        socket->waitForReadyRead(-1);
+        if (!socket->bytesAvailable()) {
+            socket->waitForReadyRead(-1);
+        }
         char buffer[500] = {'\0'};
         socket->readLine(buffer, 499);
         data.append(buffer);
     }
+
+    qDebug() << data;
+
     return data;
+}
+
+void PlayerRemote::reset()
+{
+    Player::reset();
+    lastLine.clear();
 }
 
 Piece *PlayerRemote::choosePiece()
@@ -181,9 +192,11 @@ void PlayerRemote::welcome(QString  name)
     std::cout << "SERVER: " << data.data();
 
     socket->write(name.append('\n').toAscii());
+    socket->flush();
 
     socket->waitForReadyRead(-1);
     data = socket->read(100);
+    socket->flush();
     std::cout << "SERVER: " << data.data() << std::endl;
 
     if (data.indexOf('1') == -1) // player2

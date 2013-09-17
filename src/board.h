@@ -37,7 +37,7 @@ public:
 
     bool hasSameMatrix(Board *board);
     QPair<unsigned, unsigned> lastMove;
-
+    void reset();
 private:
     QList<Piece *> stock;
     Piece ***matrix;

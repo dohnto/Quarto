@@ -16,6 +16,9 @@ public:
 
     void sendPosition(QPair<unsigned, unsigned> pos);
     void sendPiece(Piece *p);
+
+    QString getLineFromSocket();
+    void reset();
 protected:
     QPair<unsigned, unsigned> chooseField(Piece *piece);
 
@@ -28,7 +31,6 @@ private:
 
     void welcome(QString name);
 
-    QString getLineFromSocket();
 public slots:
     void closeConnection();
     void sendToServer();
