@@ -22,6 +22,7 @@ private:
     QString host;
     quint16 port;
     bool starts;
+    QString lastLine;
 
     void welcome(QString name);
 

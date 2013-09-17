@@ -2,6 +2,7 @@
 #include <QPair>
 #include <iostream>
 #include <cassert>
+#include <unistd.h>
 
 PlayerRemote::PlayerRemote(QString name, QString _host, quint16 _port, Board *board, QObject *parent) :
     Player(name, board, parent), host(_host), port(_port), starts(false)
@@ -29,20 +30,33 @@ PlayerRemote::PlayerRemote(QString name, QString _host, quint16 _port, Board *bo
 QString PlayerRemote::getLineFromSocketWithMin(int min)
 {
     QString data;
-    while (data.size() < min) {
+    while (data.indexOf('\n') == -1) {
         socket->waitForReadyRead(-1);
         char buffer[500] = {'\0'};
         socket->readLine(buffer, 499);
         data.append(buffer);
     }
 
+    /*char buffer[500] = { '\0' };
+    int i = 0;
+    int err = 1;
+    do {
+        if (err == 0)
+            i--;
+        assert(i < 500);
+        //socket->waitForReadyRead(-1);
+        err = socket->read(buffer + i, 1);
+        qDebug() << i << buffer;
+    } while (buffer[i++] != '\n');*/
+
     return data;
+    //return QString(buffer);
 }
 
 Piece *PlayerRemote::choosePiece()
 {
     // SERVER: -1100 please send your move
-    QString data = getLineFromSocketWithMin(5);
+    QString data = lastLine.remove(0, lastLine.indexOf('-'));// '-' //getLineFromSocketWithMin(4);
 //    while (data.size() < 5) {
 //        socket->waitForReadyRead(-1);
 //        char buffer[500] = {'\0'};
@@ -51,9 +65,8 @@ Piece *PlayerRemote::choosePiece()
 //    }
     std::cout << "SERVER: " << data.toStdString() << std::endl;
 
-    assert(data.size() > 4);
 
-    QString pieceStr(data.left(5).right(4));
+    QString pieceStr(data.left(4));
     Piece p(pieceStr);
 
     qDebug() << "binary piece = " << p.toBinaryString();
@@ -111,6 +124,7 @@ QPair<unsigned, unsigned> PlayerRemote::chooseField(Piece *piece)
     pair.second = data[0].toAscii() - '0';
     pair.first = data[3].toAscii() - '0';
 
+    lastLine = data;
     qDebug() << "VALGRIND: " << pair.first << pair.second << piece;
 //    std::cout << "x,y = " <<  pair.first << "," << pair.second << std::endl;
 
