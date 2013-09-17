@@ -71,12 +71,14 @@ void PlayerRemote::sendPosition(QPair<unsigned, unsigned> pos)
 
     // send position
     socket->write(posStr.toAscii());
+    socket->flush();
     std::cout << "CLIENT:" << posStr.toStdString() << std::endl;
 }
 
 void PlayerRemote::sendPiece(Piece *p)
 {
     socket->write(p->toBinaryString().append('\n').toAscii());
+    socket->flush();
     std::cout << "CLIENT:" << p->toBinaryString().toStdString() << std::endl;
 
 }
@@ -97,7 +99,6 @@ QPair<unsigned, unsigned> PlayerRemote::chooseField(Piece *piece)
     //QByteArray data = socket->readLine();
     QString data = getLineFromSocket();
     std::cout << "SERVER: " << data.toStdString() << std::endl;
-
     // send piece
     sendPiece(piece);
 
