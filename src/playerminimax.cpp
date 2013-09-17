@@ -30,7 +30,7 @@ Piece* PlayerMiniMax::choosePiece()
  */
 QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
 {            
-    if(board->getStock().size() > (QUARTO_MOVES - NOVICE_MOVES_COUNT) && maxDepth) {
+    if(board->getStock().size() > static_cast<int>(QUARTO_MOVES - NOVICE_MOVES_COUNT) && maxDepth) {
         return PlayerNovice::chooseField(piece);
     }
 

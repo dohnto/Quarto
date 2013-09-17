@@ -17,7 +17,6 @@ public:
     Piece *move(Piece *);
     virtual Piece *choosePiece() = 0;
     QString & getName() { return name; }
-
 protected:
     Board *board;
     QString name;

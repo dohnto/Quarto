@@ -75,7 +75,7 @@ unsigned PlayerHuman::getCoordToPutPiece(bool row)
  * @param piece
  * @return
  */
-QPair<unsigned, unsigned> PlayerHuman::chooseField(Piece *piece)
+QPair<unsigned, unsigned> PlayerHuman::chooseField(Piece *)
 {
     unsigned row;
     unsigned col;

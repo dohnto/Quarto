@@ -22,8 +22,8 @@ public:
 
 private:
     QCoreApplication *app;  /**< ??? TODO */
-    Player *turn;           /**< whose turn is it */
     unsigned playerCounter;
+    Player *turn;           /**< whose turn is it */
 
     Player  *player1;
     Player  *player2;
@@ -42,7 +42,8 @@ public slots:
 
     /// Called by QCoreAppliction before quitting.
     void aboutToQuitApp();
-    
+
+
 };
 
 #endif // GAME_H

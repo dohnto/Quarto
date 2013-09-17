@@ -6,6 +6,8 @@
 #include "playerminimax.h"
 #include "playerhuman.h"
 #include <iostream>
+#include <typeinfo>
+#include <cassert>
 
 /**
  * Constructor
@@ -14,7 +16,8 @@
  */
 Game::Game(player_t & p1, player_t & p2, QObject *parent) :
     QObject(parent),
-    playerCounter(0)
+    playerCounter(0),
+    turn(NULL)
 {
     // Get the instance of the main application
     app = QCoreApplication::instance();
@@ -25,7 +28,13 @@ Game::Game(player_t & p1, player_t & p2, QObject *parent) :
     player1 = createPlayer(p1);
     player2 = createPlayer(p2);
 
-    turn = player2;
+    PlayerRemote *remote1 = dynamic_cast<PlayerRemote *>(player1);
+    PlayerRemote *remote2 = dynamic_cast<PlayerRemote *>(player2);
+
+    if ((remote1 && remote1->hasFirstTurn()) || (remote2 && !remote2->hasFirstTurn()))
+        turn = player1;
+
+    turn = (turn) ? turn : player2;
 }
 
 /**

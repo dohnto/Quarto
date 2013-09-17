@@ -6,6 +6,25 @@ Piece::Piece(unsigned char properties, QObject *parent) :
 {
 }
 
+Piece::Piece(QString pieceStr)
+{
+    properties = 0;
+    for (int i = 0; i < 4; ++i)  {
+        properties |= ((pieceStr[3 - i].toAscii() - '0') << i);
+    }
+}
+
+QString Piece::toBinaryString() const
+{
+    QString result(4);
+
+    for (unsigned i = 0; i < 4; ++i) {
+        result[3 - i] = ((properties >> i) & 1) + '0';
+    }
+
+    return result;
+}
+
 /**
  * @brief Piece::toString serialize piece to string
  * @return
@@ -14,12 +33,16 @@ QString Piece::toString() const
 {
     QString pieceStr(5, ' ');
 
-    pieceStr[1] = isSquare() ? '[' : '(';
-    pieceStr[3] = isSquare() ? ']' : ')';
+//    pieceStr[1] = isSquare() ? '[' : '(';
+//    pieceStr[3] = isSquare() ? ']' : ')';
+
+    pieceStr[1] = isSquare() ? '(' : '[';
+    pieceStr[3] = isSquare() ? ')' : ']';
     pieceStr[2] = isBlue() ? (isSmall() ? 'b' : 'B') : (isSmall() ? 'r' : 'R');
-    if(isHollow())
+    if(!isHollow())
         pieceStr.insert(3, '*');
 
     return pieceStr;
 }
+
 

@@ -23,7 +23,7 @@ Board::Board(QObject *parent) : QObject(parent)
 /**
  * Copy constructor
  */
-Board::Board(Board & other)
+Board::Board(Board & other, QObject *parent) : QObject(parent)
 {
     stock = other.getStock();
 
@@ -160,11 +160,14 @@ bool Board::checkVictory()
 
 void Board::putPiece(const QPair<unsigned, unsigned> & index, Piece *piece)
 {
+    if (index.first >= MATRIX_SIZE || index.second >= MATRIX_SIZE)
+        qDebug() << "VALGRIND: " << index.first << index.second << piece;
     if (matrix[index.first][index.second] != NULL) {
         qDebug() << "Trying to put" << piece->toString() << "on " << index.first + 1 << QChar(index.second + 'W');
         throw "Cannot put piece on piece";
     }
     matrix[index.first][index.second] = piece;
+    lastMove = index;
 }
 
 
