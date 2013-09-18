@@ -238,17 +238,17 @@ Results can be seen in figure \ref{fig:tournament2}.
         \begin{tabular}{cll}
             \toprule
             \textcolor{red!100}{$\bullet$} & Marc's and Valerio's wins & 0       \\
-            \textcolor{blue!100!yellow!100!red!80}{$\bullet$} & Our Minimax-4  wins & 18      \\  
-            \textcolor{gray!100}{$\bullet$} & Draws & 2      \\  
+            \textcolor{blue!100!yellow!100!red!80}{$\bullet$} & Our Minimax-4  wins & 20      \\  
+            \textcolor{gray!100}{$\bullet$} & Draws & 0      \\  
             \bottomrule
         \end{tabular}
     \end{minipage}
     \begin{minipage}[c]{0.60\linewidth}
         \centering
-%        \includegraphics[scale=0.35]{img/tournament2.pdf}
+    \includegraphics[scale=0.35]{img/tournament2.pdf}
     \end{minipage}
     \caption{20 games of Marc's and Valerio's Minimax-4 against our Minimax-4.}
-    \label{fig:tournament2}
+	\label{fig:tournament2}
 \end{figure}
 
 
@@ -274,7 +274,7 @@ The biggest issue was connected with fact that our architecture was not designed
 We have created special player called \emph{Minimax-0} which had no fixed depth of alphabeta search and use variable depth instead. As game continues we increase the depth because the search space is getting rapidly smaller after each turn. From 8th move we were able to use Minimax-8 and so we could explore the search space entirely. In the beginning of tournament we have agreed with our opponents that we would not player and use Minimax-4 instead.
 
 
-%Our client has won most of the games and we were of course satisfied with this result. After the tournament we have discussed our strategy with our opponents and we have figured out that the main difference is of course in evaluation function. Ours was probably much more powerful. It was really helpful to have a opportunity to compare our state-evaluated function against other teams.
+%Our client has won most of the games and we were of course satisfied with this result. After the tournament we have discussed our strategy with our opponents and we have figured out that the main difference is of course in evaluation function. Ours was probably much more powerful. It was really helpful to have a opportunity to compare our state-evaluated function against other teams.	
 
 As Marc and Valerio were not able to finish they program, we played only against Dominik's and Pablo's player. Our client has won most of the games and we were of couse satisfied with this results. After the tournament we have discussed our strategy with our opponents and we figured out that the main difference is of course in evaluation function. Ours was probably much more powerful.
 
