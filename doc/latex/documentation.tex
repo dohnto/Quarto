@@ -136,9 +136,21 @@ In half of the games started Minimax-3, in the other half it was Minimax-4.
 \subsection{Minimax in tournament}
 
 \section{Reflection}
+In this section we will reflect our experience with programming for the tournament and also the participation in tournament itself.
+
 \subsection{Experience of programming for tournament}
+During designing architecture of our program, we had a short  meeting with other teams and we have decided to use client-server architecture. 
+We didn't really design any protocol at that moment.
+
+As Dominik and Pablo have finished their implementation early, they suggested that they can create simple server as an extension to their application. 
+They have made their own protocol and implemented the server and example of client in Java. 
+As we use C++/Qt we did not have to implement client from scratch, we could use some Qt classes that let us work over network very easily. 
+
+The biggest issue was connected with fact that our architecture was not designed to play repeated games (as we intended to run repeated games in simple loop from shell) and we had to redesign and reimplement some parts of our code. We have also encountered issues related to networking and understanding the protocol.
+
 \subsection{Participation in tournament}
 \section{Summary}
+
 %-----------------------------------------------
 \begin{flushleft}
 %\bibliography{literatura} % viz. literatura.bib..
