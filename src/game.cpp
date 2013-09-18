@@ -104,7 +104,7 @@ void Game::run()
 
             qDebug() << "SERVERxx:" << data;
             while (data != "Please reset yourself for the next game.\n") {
-                data = remote->getLineFromSocket();
+                data = remote->getLineFromS cket();
                 qDebug() << "SERVERyy:" << data;
             }
         }

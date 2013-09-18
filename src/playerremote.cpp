@@ -23,31 +23,6 @@ PlayerRemote::PlayerRemote(QString name, QString _host, quint16 _port, Board *bo
     welcome(QString("grans-lettol"));
 }
 
-<<<<<<< HEAD
-QString PlayerRemote::getLineFromSocketWithMin(int min)
-{  
-    QString data = "";
-
-    qint64 ret = -1;
-    while(ret <= 0) {
-        char buf[500] = {'\0'};
-        socket->waitForReadyRead(-1);
-        ret = socket->readLine(buf, 499);
-        data.append(buf);
-    }
-
-
-    qDebug() << "read from socket: " << data;
-    qDebug() << "newline " << (data.indexOf('\n') != -1 ? "FOUND" : "NOT FOUND");
-
-
-//    while (data.size() < min) {
-//        socket->waitForReadyRead(-1);
-//        char buffer[500] = {'\0'};
-//        socket->readLine(buffer, 499);
-//        data.append(buffer);
-//    }
-=======
 QString PlayerRemote::getLineFromSocket()
 {
     QString data;
@@ -61,7 +36,6 @@ QString PlayerRemote::getLineFromSocket()
     }
 
     qDebug() << data;
->>>>>>> 0d13e85512fcc7865232c944f40b782ca88bd8e0
 
     return data;
 }
@@ -82,10 +56,6 @@ Piece *PlayerRemote::choosePiece()
         data = getLineFromSocket();
     std::cout << "SERVER: " << data.toStdString() << std::endl;
 
-<<<<<<< HEAD
-    //assert(data.size() > 4);
-=======
->>>>>>> 0d13e85512fcc7865232c944f40b782ca88bd8e0
 
     QString pieceStr(data.left(4));
     Piece p(pieceStr);
