@@ -42,6 +42,7 @@ private:
 
     int lastPieceState(Board *board, Piece *piece);
     int chooseDepth();
+    void  reset();
 };
 
 #endif // PLAYERMINIMAX_H

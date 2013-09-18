@@ -8,8 +8,7 @@ PlayerMiniMax::PlayerMiniMax(QString name, unsigned maxDepth,
                              Board *board, QObject *parent) :
     PlayerNovice(name, board, parent), maxDepth(maxDepth)
 {
-    bestPiece = NULL;
-    bestPos.first = bestPos.second = 0;
+    reset();
 }
 
 /**
@@ -44,7 +43,6 @@ QPair<unsigned, unsigned> PlayerMiniMax::chooseField(Piece *piece)
         struct AlphaBetaResult result = alphabeta(board, piece, depth, MINUS_INF - 1, PLUS_INF + 1, true);
         bestPos = result.field;
         bestPiece = result.piece;
-        std::cout << "alfabeta = " << result.score << std::endl;
     }
 
     return bestPos;
@@ -208,6 +206,13 @@ int PlayerMiniMax::evalGameState(Board* board, Piece* piece)
     return score;
 }
 
+/**
+ * @brief PlayerMiniMax::remainingPiecesScore core evaluation function
+ * @param board
+ * @param piece
+ * Evaluates given possition (board + piece) and returns number > 0 if
+ * position is good, 0 if draw and < 0 if player thinks that he loose
+ */
 int PlayerMiniMax::remainingPiecesScore(Board *board, Piece *piece)
 {
     static Board *possibleBoard = NULL;
@@ -242,4 +247,13 @@ int PlayerMiniMax::remainingPiecesScore(Board *board, Piece *piece)
     }
 
     return (remaining % 2) ? (PLUS_INF - remaining) : (MINUS_INF + remaining);
+}
+
+/**
+ * @brief PlayerMiniMax::reset resets itself for new game
+ */
+void  PlayerMiniMax::reset()
+{
+    bestPiece = NULL;
+    bestPos.first = bestPos.second = 0;
 }

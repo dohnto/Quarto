@@ -1,7 +1,6 @@
-dodelat: 
+dodelat:
     doku
     upravit vypisy
-    vyhry/prohry v tournamentu
     komentare
 
 Classes

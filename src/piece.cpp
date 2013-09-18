@@ -6,6 +6,10 @@ Piece::Piece(unsigned char properties, QObject *parent) :
 {
 }
 
+/**
+ * @brief Piece::Piece serializing support
+ * @param pieceStr
+ */
 Piece::Piece(QString pieceStr)
 {
     properties = 0;
@@ -14,6 +18,10 @@ Piece::Piece(QString pieceStr)
     }
 }
 
+/**
+ * @brief Piece::toBinaryString serializing support
+ * @return
+ */
 QString Piece::toBinaryString() const
 {
     QString result(4);

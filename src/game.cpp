@@ -33,6 +33,7 @@ Game::Game(unsigned repetitions, player_t & p1, player_t & p2, QObject *parent) 
     PlayerRemote *remote2 = dynamic_cast<PlayerRemote *>(player2);
 
     if ((remote1 && remote1->hasFirstTurn()) || (remote2 && !remote2->hasFirstTurn()))
+        // remote player chooses who starts
         starts = player1;
     else
         starts = player2;
@@ -52,7 +53,6 @@ void Game::run()
         Piece* piece = turn->choosePiece();
         board->deletePieceFromStock(piece);
         std::cout << turn->getName().toStdString() << " choosed first piece: " << piece->toString().toStdString() << std::endl;
-
         try {
             while (!board->checkVictory() && piece != NULL) {
                 turn = getOpponent(turn);
@@ -66,17 +66,13 @@ void Game::run()
             }
         } catch (const char * excpt) {
             qDebug() << excpt;
+            exit(1);
         }
-
-        qDebug() << "checkpoint 1";
 
         if (isPlayerRemote(getOpponent(turn))) {
             PlayerRemote *p =  dynamic_cast<PlayerRemote *>(getOpponent(turn));
             p->sendPosition(board->lastMove);
         }
-
-
-        qDebug() << "checkpoint 2";
 
         if (board->checkVictory()) { // someone has won
             unsigned index = turn == player1 ? 0 : 2;
@@ -91,21 +87,13 @@ void Game::run()
             std::cout << "It is a draw!" << std::endl;
         }
 
-
-        qDebug() << "checkpoint 3";
-
-        qDebug() << "podminka = " << (isPlayerRemote(player1) || isPlayerRemote(player2));
         if ((isPlayerRemote(player1)) || isPlayerRemote(player2)) { // remote game, check if repetition;
-            qDebug() << "VZDALENA";
-
             Player *r = isPlayerRemote(player1) ? player1 : player2;
             PlayerRemote *remote = dynamic_cast<PlayerRemote *>(r);
             QString data = remote->getLineFromSocket();
 
-            qDebug() << "SERVERxx:" << data;
             while (data != "Please reset yourself for the next game.\n") {
-                data = remote->getLineFromS cket();
-                qDebug() << "SERVERyy:" << data;
+                data = remote->getLineFromSocket();
             }
         }
 
@@ -173,6 +161,11 @@ Player *Game::createPlayer(struct player_t &player)
     return retval;
 }
 
+/**
+ * @brief Game::isPlayerRemote checks if player is remote player
+ * @param p
+ * @return
+ */
 bool Game::isPlayerRemote(Player *p)
 {
     assert(p != NULL);
@@ -181,19 +174,24 @@ bool Game::isPlayerRemote(Player *p)
     return remote != NULL;
 }
 
+/**
+ * @brief Game::printStatistics prints given statistics
+ * @param resultsTable is a array of 3 items player1wins - draws - player2wins
+ */
 void Game::printStatistics(unsigned *resultsTable)
 {
     std::cout << "---------------------------------------\n";
     std::cout << repetitions << " games played\n";
     std::cout << player1->getName().toStdString() << " had won " << resultsTable[0] << " times\n";
-    std::cout << player1->getName().toStdString() << " had tied " << resultsTable[1] << " times\n";
-    std::cout << player1->getName().toStdString() << " had lost " << resultsTable[2] << " times\n";
+    std::cout << player2->getName().toStdString() << " had won " << resultsTable[2] << " times\n";
+    std::cout << "Draws: " << resultsTable[1] << " times\n";
     std::cout << "---------------------------------------\n";
 }
 
 /**
  * Last cleaning before quitting.
  */
-void Game::aboutToQuitApp() {
+void Game::aboutToQuitApp()
+{
     // cleaning
 }

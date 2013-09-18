@@ -10,19 +10,24 @@ PlayerRemote::PlayerRemote(QString name, QString _host, quint16 _port, Board *bo
     socket = new QTcpSocket(this);
 
     connect(socket, SIGNAL(connected()), this, SLOT(socketConnected()));
-    //connect(socket, SIGNAL(connectionClosed()), this, SLOT(socketConnectionClosed()));
-    //connect(socket, SIGNAL(readyRead()), this, SLOT(socketReadyRead()));
-    //connect(socket, SIGNAL(error()), this, SLOT(socketError()));
 
     // connect to server
-    qDebug() << "Connecting to server " << host << "on port " << port << "\n";
+    qDebug() << "Connecting to server " << host << "on port " << port;
 
     socket->connectToHost(host, port);
-    qDebug() << "socket valid: " << socket->isValid() << "\n";
+    if (!socket->waitForConnected(300)) {
+        qDebug() << "Couldnt connect to server";
+        exit(2);
+    }
 
     welcome(QString("grans-lettol"));
 }
 
+/**
+ * @brief PlayerRemote::getLineFromSocket
+ * @return
+ * Read content of socket, by using this function you can be sure that \n was read.
+ */
 QString PlayerRemote::getLineFromSocket()
 {
     QString data;
@@ -34,43 +39,48 @@ QString PlayerRemote::getLineFromSocket()
         socket->readLine(buffer, 499);
         data.append(buffer);
     }
-
-    qDebug() << data;
-
     return data;
 }
 
+/**
+ * @brief PlayerRemote::reset reset itself for next game.
+ */
 void PlayerRemote::reset()
 {
     Player::reset();
     lastLine.clear();
 }
 
+/**
+ * @brief PlayerRemote::choosePiece reads choosen piece from server
+ * @return
+ */
 Piece *PlayerRemote::choosePiece()
 {
     QString data;
     // SERVER: -1100 please send your move
     if (lastLine.size())
-        data = lastLine.remove(0, lastLine.indexOf('-')+1);// '-' //getLineFromSocketWithMin(4);
+        data = lastLine.remove(0, lastLine.indexOf('-')+1);
     else
         data = getLineFromSocket();
-    std::cout << "SERVER: " << data.toStdString() << std::endl;
+    //std::cout << "SERVER: " << data.toStdString() << std::endl;
 
 
     QString pieceStr(data.left(4));
     Piece p(pieceStr);
-
-    qDebug() << "binary piece = " << p.toBinaryString();
 
     Piece *candidate = NULL;
     foreach (candidate, board->getStock())
         if(candidate->toBinaryString() == p.toBinaryString())
             break;
 
-    assert(candidate);
     return candidate;
 }
 
+/**
+ * @brief PlayerRemote::sendPosition sends given possition to server
+ * @param pos
+ */
 void PlayerRemote::sendPosition(QPair<unsigned, unsigned> pos)
 {
     QString posStr(5);
@@ -83,17 +93,27 @@ void PlayerRemote::sendPosition(QPair<unsigned, unsigned> pos)
     // send position
     socket->write(posStr.toAscii());
     socket->flush();
-    std::cout << "CLIENT:" << posStr.toStdString() << std::endl;
+    //std::cout << "CLIENT:" << posStr.toStdString() << std::endl;
 }
 
+/**
+ * @brief PlayerRemote::sendPiece sends given piece to server
+ * @param p
+ */
 void PlayerRemote::sendPiece(Piece *p)
 {
     socket->write(p->toBinaryString().append('\n').toAscii());
     socket->flush();
-    std::cout << "CLIENT:" << p->toBinaryString().toStdString() << std::endl;
+    //std::cout << "CLIENT:" << p->toBinaryString().toStdString() << std::endl;
 
 }
 
+/**
+ * @brief PlayerRemote::chooseField communicates with server and finds out what says
+ * which piece should put on matrix and also gets answer where he did.
+ * @param piece
+ * @return
+ */
 QPair<unsigned, unsigned> PlayerRemote::chooseField(Piece *piece)
 {
     QPair<unsigned, unsigned> pair;
@@ -106,17 +126,12 @@ QPair<unsigned, unsigned> PlayerRemote::chooseField(Piece *piece)
     }
 
     // SERVER: please send piece in binary format
-    //socket->waitForReadyRead(-1);
-    //QByteArray data = socket->readLine();
     QString data = getLineFromSocket();
     std::cout << "SERVER: " << data.toStdString() << std::endl;
     // send piece
     sendPiece(piece);
 
     // SERVER: 2, 2
-    //socket->waitForReadyRead(-1);
-    //data = socket->readLine();
-
     data.clear();
     data = getLineFromSocket();
     std::cout << "SERVER: " << data.toStdString() << std::endl;
@@ -126,32 +141,14 @@ QPair<unsigned, unsigned> PlayerRemote::chooseField(Piece *piece)
     pair.first = data[3].toAscii() - '0';
 
     lastLine = data;
-    qDebug() << "VALGRIND: " << pair.first << pair.second << piece;
-//    std::cout << "x,y = " <<  pair.first << "," << pair.second << std::endl;
 
     return pair;
 }
 
 void PlayerRemote::closeConnection()
 {
-//    socket->close();
-//    if ( socket->state() == QSocket::Closing ) {
-//        // We have a delayed close.
-//        connect( socket, SIGNAL(delayedCloseFinished()),
-//                SLOT(socketClosed()) );
-//    } else {
-//        // The socket is closed.
-//        socketClosed();
-//    }
 }
 
-void PlayerRemote::sendToServer()
-{
-    // write to the server
-//    QTextStream os(socket);
-//    os << inputText->text() << "\n";
-//    inputText->setText( "" );
-}
 
 void PlayerRemote::socketReadyRead()
 {
@@ -170,14 +167,8 @@ void PlayerRemote::socketConnected()
     qDebug() << "Connected to server.\n";
 }
 
-//void PlayerRemote::socketConnectionClosed()
-//{
-////    infoText->append( tr("Connection closed by the server\n") );
-//}
-
 void PlayerRemote::socketClosed()
 {
-//    infoText->append( tr("Connection closed\n") );
 }
 
 void PlayerRemote::socketError()
@@ -202,5 +193,4 @@ void PlayerRemote::welcome(QString  name)
 
     if (data.indexOf('1') == -1) // player2
         starts = true;
-    qDebug() << starts;
 }
