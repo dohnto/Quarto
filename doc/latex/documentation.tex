@@ -51,7 +51,77 @@
 \maketitle % Print the title
 
 \section{Introduction}
-\section{State evaluation function}
+
+
+The game called Quarto is a puzzle game that somewhat resembles of the well known game Tic-tac-toe. As far as the artificial intelligence of computer driven player is concerned the game seems to be way more complex though. The game board consists of the 16 fields and each player can choose from the 16 different pieces that are placed on board in an iterative manner. What is more each player chooses the piece for his opponent and this fact makes the game state space even more complex.
+
+Given the computational difficulty the artificial player is not able to explore entirely all of the game states. Therefore it is necessary to come up with the right heuristic functions that would be both time efficient and would return the value that describes the game state the best.
+
+We will first introduce our implementation and then we will explain our chosen heuristics. In the end we will present the results both from the testing within our application and from the Quarto tournament.
+
+\section{Implementation}
+This section is devoted to the technical details of our implementation. In section \ref{txt:tech} the technologies we utilized are listed, section \ref{txt:arch} gives the brief description of the overall architecture and the section \ref{txt:evalfunc} presents the state evaluation algorithm and the heuristics we designed.
+
+\subsection{Chosen technologies} \label{txt:tech}
+The core alpha-beta algorithm and the evaluation function might be computationally demanding as the evaluator needs to explore the immense state space. Therefor we decided to use the C++ programming language as the executable binary tends to run faster compared to the interpreted programs. We also use th Qt libraries because its inbuilt containers and network programming support simplifies the implementation.
+
+\subsection{Architecture} \label{txt:arch}
+
+The game is run as a console application and the types of the players can be set using the program parameters.
+
+\subsection{State evaluation function} \label{txt:evalfunc}
+
+There are two main requirements that the good state evaluation function must fulfil - it should both return the values that comply with the player's intention to win and it should be time efficient. The first possible naive approach is to examine whether the opponent might win in the next move and the second more complex approach is to examine the number of the pieces the player can choose from so that he would not loose.
+
+\subsubsection{Heuristic 1 - The victory}
+
+This is the easiest heuristic each beginner player can think of. In every move we just check whether the piece the player chooses would not enable the opponent to win in the next move. Using this heuristic the minimax player of the level 1 is somewhat similar to the novice player. However the minimax player of the greater level can beat the novice player as the minimax can estimate the path to the victory better.
+
+\subsubsection{Heuristic 2 - Odd or even}
+
+how many triplets\footnote{(By triplet we refer to the the three pieces that have at least one common property and that are placed either in the same row, column or diagonal.} are currently placed on the game board.
+
+Let's say there is just one triplet with the pieces sharing just one common property present on the game board. Given the fact both players intend to win they will be choosing the pieces of the opposite property (as compared to the triplet's property) in their next moves. The player who chooses the piece for his opponent can therefore easily see whether the situation is good or bad for him by the number of remaining pieces of the opposite property. If the number is even this player will potentially loose in the next moves as he might be sooner or later forced to give his opponent the piece of the property that the pieces in triplet share.
+
+The figure \ref{fig:1triplet} shows the situation when exactly one triplet is placed on the board. It can be noticed that the three pieces contained in the only triplet share one common property - they are all big. The player who chooses the piece should only pick the small piece for his opponent. We can see there are 7 small pieces to choose from and as this is an odd number the situation for this player looks promising.
+
+\begin{figure}[!htb]
+	\centering
+		\includegraphics[width=10cm]{img/eval_func_1triplet.eps}
+	\caption{1 triplet}
+	\label{fig:1triplet}
+\end{figure}
+
+Sadly the situation might (and will) get more complicated when more pieces are placed on board. The figure \ref{fig:2triplets} shows the situation when two different triplets are present on the board. The pieces of the vertical triplet are all big and the pieces of the horizontal triplet are all blue. The player who chooses the piece for his opponent should now pick the small piece and also the red piece. If we examine the remaining pieces we can notice there are seven small pieces and 6 red pieces remaining - an odd and an even number. The situation is now both good and bad for the player.
+
+\begin{figure}[!htb]
+	\centering
+		\includegraphics[width=10cm]{img/eval_func_2triplets.eps}
+	\caption{2 triplets}
+	\label{fig:2triplets}
+\end{figure}
+
+Given this inconsistency we had to adjust our final approach. For each game state we examine the board and count the pieces that the player can choose for his opponent so that he would not loose in the next move. Example situation can be seen on the figure \ref{fig:even} where the \textit{good} and \textit{bad} pieces are listed. It is obvious that the player can choose only two pieces and as this is the even number we evaluate this game state as inconvenient for the player.
+
+
+\begin{figure}[!htb]
+	\centering
+		\includegraphics[width=10cm]{img/eval_func_even.eps}
+	\caption{Even number of remaining pieces.}
+	\label{fig:even}
+\end{figure}
+
+We also estimate how good or bad this situation is for the player by the number of the pieces he can choose from. The higher this number is the less significant this position is as the game state can change easily in the next moves. However if the number is low (let's say just 2) the game state will hardly change in the next moves.
+
+In the greater detail we just subtract the number of these pieces from the positive infinity (represented by number 1024) in case an odd number of "good" pieces are remaining or we add this number to the negative infinity (represented by number -1024) in case of the even number of "good" pieces are remaining.
+
+
+
+
+
+
+
+
 \section{Results}
 
 In this section we present results of some matches between our-implemented players and also results of our special player Minimax-0 in tournament.

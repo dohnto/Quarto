@@ -152,6 +152,7 @@ void PlayerRemote::closeConnection()
 
 void PlayerRemote::socketReadyRead()
 {
+    socket->waitForReadyRead(-1);
     // read from the server
 
     QByteArray msg;
