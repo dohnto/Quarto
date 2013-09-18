@@ -80,6 +80,9 @@ QPair<unsigned, unsigned> PlayerHuman::chooseField(Piece *)
     unsigned row;
     unsigned col;
 
+    board->printMatrix();
+    board->printStock();
+
     do {
         row = getCoordToPutPiece(true);
         col = getCoordToPutPiece(false);

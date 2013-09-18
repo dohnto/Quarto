@@ -50,8 +50,6 @@ void Game::run()
 
     for (unsigned i = 0; i < repetitions; ++i) {
         turn = starts;
-        board->printMatrix();
-        board->printStock();
         Piece* piece = turn->choosePiece();
         board->deletePieceFromStock(piece);
         std::cout << turn->getName().toStdString() << " choosed first piece: " << piece->toString().toStdString() << std::endl;
