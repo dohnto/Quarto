@@ -134,13 +134,38 @@ In half of the games started Minimax-3, in the other half it was Minimax-4.
 \end{figure}
 
 \subsection{Minimax in tournament}
+We have played 20 games with our Minimax-4 player against Dominik's and Pablo's player.
+Results can be seen in figure \ref{fig:tournament}.
+In half of the games started our player, in the other half it was player of Dominik and Pablo.
+
+\begin{figure}[ht]
+    \begin{minipage}[c]{0.40\linewidth}
+        \centering
+        \ra{1.3}
+        \begin{tabular}{cll}
+            \toprule
+            \textcolor{red!100}{$\bullet$} & Dominik's and Pablo's wins & 0       \\
+            \textcolor{blue!100!yellow!100!red!80}{$\bullet$} & Our Minimax-4  wins & 18      \\  
+            \textcolor{gray!100}{$\bullet$} & Draws & 2      \\  
+            \bottomrule
+        \end{tabular}
+    \end{minipage}
+    \begin{minipage}[c]{0.60\linewidth}
+        \centering
+        \includegraphics[scale=0.35]{img/tournament.pdf}
+    \end{minipage}
+    \caption{20 games of Dominik's and Pablo's Minimax-4 against our Minimax-4.}
+    \label{fig:tournament}
+\end{figure}
+
+Unfortunatelly we could not play against Marc's and Valerio's player because they were not able to implement network module for this project in time.
 
 \section{Reflection}
 In this section we will reflect our experience with programming for the tournament and also the participation in tournament itself.
 
 \subsection{Experience of programming for tournament}
 During designing architecture of our program, we had a short  meeting with other teams and we have decided to use client-server architecture. 
-We didn't really design any protocol at that moment.
+We did not design any protocol at that moment.
 
 As Dominik and Pablo have finished their implementation early, they suggested that they can create simple server as an extension to their application. 
 They have made their own protocol and implemented the server and example of client in Java. 
@@ -149,7 +174,12 @@ As we use C++/Qt we did not have to implement client from scratch, we could use 
 The biggest issue was connected with fact that our architecture was not designed to play repeated games (as we intended to run repeated games in simple loop from shell) and we had to redesign and reimplement some parts of our code. We have also encountered issues related to networking and understanding the protocol.
 
 \subsection{Participation in tournament}
+We have created special player called \emph{Minimax-0} which had no fixed depth of alphabeta search and use variable depth instead. As game continues we increase the depth because the search space is getting rapidly smaller after each turn. From 8th move we were able to use Minimax-8 and so we could explore the search space entirely. In the beginning of tournament we have agreed with our opponents that we would not player and use Minimax-4 instead.
+
+As Marc and Valerio were not able to finish they program, we played only against Dominik's and Pablo's player. Our client has won most of the games and we were of couse satisfied with this results. After the tournament we have discussed our strategy with our opponents and we figured out that the main difference is of course in evaluation function. Ours was probably much more powerful.
+
 \section{Summary}
+In this 
 
 %-----------------------------------------------
 \begin{flushleft}
