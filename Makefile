@@ -19,3 +19,4 @@ zip pack:
 		$(FOLDER)/src/Quarto.pro \
 		$(FOLDER)/doc/quarto-doc.pdf; \
 	cp $(ARCHIVE) $(FOLDER)
+
